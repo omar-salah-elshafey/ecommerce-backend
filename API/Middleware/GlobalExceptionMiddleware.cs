@@ -1,4 +1,5 @@
 ﻿using Application.ExceptionHandling;
+using FluentValidation;
 
 namespace API.Middleware
 {
@@ -16,6 +17,12 @@ namespace API.Middleware
             try
             {
                 await _next(context);
+            }
+            catch (ValidationException ex)
+            {
+                _logger.LogWarning($"Validation error: {ex.Message}");
+                context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                await context.Response.WriteAsJsonAsync(new { error = ex.Message });
             }
             catch (DuplicateEmailException ex)
             {

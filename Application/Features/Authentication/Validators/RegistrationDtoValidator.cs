@@ -7,21 +7,26 @@ namespace Application.Features.Authentication.Validators
     {
         public RegistrationDtoValidator()
         {
-            // Basic validation
             RuleFor(x => x.FirstName).NotEmpty().MaximumLength(50);
             RuleFor(x => x.LastName).NotEmpty().MaximumLength(50);
             RuleFor(x => x.UserName).NotEmpty().MaximumLength(50);
             RuleFor(x => x.Email).NotEmpty().EmailAddress();
             RuleFor(x => x.PhoneNumber).NotEmpty();
             RuleFor(x => x.Password).NotEmpty().MinimumLength(8);
-            RuleFor(x => x.ConfirmPassword).Equal(x => x.Password);
+            RuleFor(x => x.ConfirmPassword).Equal(x => x.Password).WithMessage("Passwords do not match.");
 
-            // Role validation
             RuleFor(x => x.Role)
                 .IsInEnum()
                 .WithMessage("Invalid role.");
 
-            // Conditional validation for ChildrenCount
+            RuleFor(x => x.Gender)
+                .IsInEnum()
+                .WithMessage("Invalid Choice.");
+
+            RuleFor(x => x.MaritalStatus)
+                .IsInEnum()
+                .WithMessage("Invalid Choice.");
+
             When(x => !x.HasChildren, () =>
             {
                 RuleFor(x => x.ChildrenCount)

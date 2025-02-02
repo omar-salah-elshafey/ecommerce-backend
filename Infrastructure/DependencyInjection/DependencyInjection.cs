@@ -34,8 +34,10 @@ namespace Infrastructure.DependencyInjection
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(RegisterUserCommandHandler).Assembly));
 
             services.AddScoped<IValidator<RegistrationDto>, RegistrationDtoValidator>();
+            services.AddScoped<IValidator<LoginDto>, LoginDtoValidator>();
             // Register application services
             services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<ICookieService, CookieService>();
 
             return services;
         }

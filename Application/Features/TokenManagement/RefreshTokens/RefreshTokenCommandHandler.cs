@@ -36,13 +36,13 @@ namespace Application.Features.TokenManagement.RefreshTokens
 
             var jwtToken = await _mediator.Send(new CreateTokenCommand(user));
             authResponseModel.AccessToken = new JwtSecurityTokenHandler().WriteToken(jwtToken);
-            authResponseModel.ExpiresAt = jwtToken.ValidTo;
+            authResponseModel.ExpiresAt = jwtToken.ValidTo.ToLocalTime();
             authResponseModel.Email = user.Email;
             authResponseModel.Username = user.UserName;
             authResponseModel.Role = (await _userManager.GetRolesAsync(user)).FirstOrDefault() ?? "User";
             authResponseModel.RefreshToken = newRefreshToken.Token;
-            authResponseModel.RefreshTokenExpiresOn = newRefreshToken.ExpiresOn;
-            _logger.LogInformation($"Refresh token successfully generated for user {user.UserName}.");
+            authResponseModel.RefreshTokenExpiresOn = newRefreshToken.ExpiresOn.ToLocalTime();
+            _logger.LogInformation($"Access token successfully refreshed for user {user.UserName}.");
             return authResponseModel;
         }
     }
