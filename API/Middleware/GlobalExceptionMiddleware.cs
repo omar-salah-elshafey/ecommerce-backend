@@ -24,15 +24,9 @@ namespace API.Middleware
                 context.Response.StatusCode = StatusCodes.Status400BadRequest;
                 await context.Response.WriteAsJsonAsync(new { error = ex.Message });
             }
-            catch (DuplicateEmailException ex)
+            catch (DuplicateValueException ex)
             {
                 _logger.LogWarning($"Duplicate email error: {ex.Message}");
-                context.Response.StatusCode = StatusCodes.Status409Conflict;
-                await context.Response.WriteAsJsonAsync(new { error = ex.Message });
-            }
-            catch (DuplicateUsernameException ex)
-            {
-                _logger.LogWarning($"Duplicate username error: {ex.Message}");
                 context.Response.StatusCode = StatusCodes.Status409Conflict;
                 await context.Response.WriteAsJsonAsync(new { error = ex.Message });
             }
@@ -100,7 +94,7 @@ namespace API.Middleware
             {
                 _logger.LogError($"Unexpected error: {ex.Message}");
                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                await context.Response.WriteAsJsonAsync(new { error = "An unexpected error occurred." });
+                await context.Response.WriteAsJsonAsync(new { error = "حدث خطأ غير متوقع. برجاء المحاولة مرة أخرى لاحقا." });
             }
         }
     }

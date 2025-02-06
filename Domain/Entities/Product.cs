@@ -17,5 +17,7 @@ namespace Domain.Entities
         public bool IsDeleted { get; set; }
         public List<ProductImage> Images { get; set; }
         public ICollection<ProductCategory> ProductCategories { get; set; }
+        public bool IsFeatured { get; set; }
+        public int SalesCount { get; set; }
     }
 }

@@ -15,21 +15,13 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController : ControllerBase
+    public class AuthController(IMediator _mediator, ICookieService _cookieService) : ControllerBase
     {
-        private readonly IMediator _mediator;
-        private readonly ICookieService _cookieService;
-
-        public AuthController(IMediator mediator, ICookieService cookieService)
-        {
-            _mediator = mediator;
-            _cookieService = cookieService;
-        }
         [HttpPost("register-user")]
         public async Task<IActionResult> RegisterUserAsync([FromBody] RegistrationDto registrationDto)
         {
             if (registrationDto.Role == Role.Admin)
-                throw new ForbiddenAccessException("You cannot register as an admin.");
+                throw new ForbiddenAccessException("لا يمكن إتمام العملية!.");
 
             var result = await _mediator.Send(new RegisterUserCommand(registrationDto));
 
@@ -79,7 +71,7 @@ namespace API.Controllers
                 refreshToken = Request.Cookies["refreshToken"];
             }
             await _mediator.Send(new LogoutCommand(refreshToken));
-            return Ok(new {message = "Successfully logged out" });
+            return Ok(new {message = "تم تسجيل الخروج بنجاح." });
         }
 
         [HttpGet("refreshtoken")]

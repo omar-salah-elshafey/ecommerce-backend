@@ -11,21 +11,9 @@ using MimeKit;
 
 namespace Infrastructure.Services
 {
-    public class EmailService : IEmailService
+    public class EmailService(IConfiguration _config, UserManager<User> _userManager,
+        IOptions<DataProtectionTokenProviderOptions> _tokenProviderOptions, ILogger<EmailService> _logger) : IEmailService
     {
-        private readonly IConfiguration _config;
-        private readonly UserManager<User> _userManager;
-        private readonly IOptions<DataProtectionTokenProviderOptions> _tokenProviderOptions;
-        private readonly ILogger<EmailService> _logger;
-
-        public EmailService(IConfiguration config, UserManager<User> userManager,
-            IOptions<DataProtectionTokenProviderOptions> tokenProviderOptions)
-        {
-            _config = config;
-            _userManager = userManager;
-            _tokenProviderOptions = tokenProviderOptions;
-        }
-
         public async Task SendEmailAsync(string toEmail, string subject, string body)
         {
             var email = new MimeMessage();
@@ -48,28 +36,16 @@ namespace Infrastructure.Services
         {
 
             if (string.IsNullOrEmpty(confirmEmailDto.Email) || string.IsNullOrEmpty(confirmEmailDto.Token))
-            {
-                _logger.LogError("Email and token are required.");
-                throw new InvalidEmailOrTokenException("Email and token are required.");
-            }
+                throw new InvalidEmailOrTokenException("البريد والرمز مطلوبان.");
 
             var user = await _userManager.FindByEmailAsync(confirmEmailDto.Email);
             if (user == null)
-            {
-                _logger.LogError("User not found.");
-                throw new NotFoundException("User not found.");
-            }
+                throw new NotFoundException("البريد الإلكتروني غير صالح!");
             if (user.EmailConfirmed)
-            {
-                _logger.LogWarning("Your email is already confirmed.");
-                throw new EmailAlreadyConfirmedException("Your Email is already confirmed");
-            }
+                throw new EmailAlreadyConfirmedException("الحساب مفعل بالفعل");
             var result = await _userManager.ConfirmEmailAsync(user, confirmEmailDto.Token);
             if (!result.Succeeded)
-            {
-                _logger.LogError("Token is not valid.");
-                throw new InvalidTokenException("Token is not valid.");
-            }
+                throw new InvalidTokenException("الرمز غير صالح.");
 
             _logger.LogInformation("Your email has been confirmed.");
         }
@@ -78,23 +54,17 @@ namespace Infrastructure.Services
         {
             var user = await _userManager.FindByEmailAsync(Email);
             if (user == null)
-            {
-                _logger.LogError("User not found.");
-                throw new NotFoundException("User not found.");
-            }
+                throw new NotFoundException("البريد الإلكتروني غير صالح!");
 
             if (await _userManager.IsEmailConfirmedAsync(user))
-            {
-                _logger.LogWarning("Your email is already confirmed.");
-                throw new EmailAlreadyConfirmedException("Email is already confirmed.");
-            }
+                throw new EmailAlreadyConfirmedException("الحساب مفعل بالفعل.");
 
             // Generate new token
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             var expirationTime = _tokenProviderOptions.Value.TokenLifespan.TotalMinutes;
             // Send the new token via email
-            await SendEmailAsync(user.Email, "Email Verification Code",
-                $"Hello {user.UserName}, Use this new token to verify your Email: {token}\n This code is Valid only for {expirationTime} Minutes.");
+            await SendEmailAsync(user.Email, "رمز التحقق من البريد الإلكتروني",
+                $"أهلا {user.UserName}, استخدم هذا الرمز للتحقق من بريدك الإلكتروني: {token}\n الرمز صالح لمدة {expirationTime} دقائق فقط.");
         }
     }
 }

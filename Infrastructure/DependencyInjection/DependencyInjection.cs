@@ -1,6 +1,10 @@
 ﻿using Application.Features.Authentication.Commands.RegisterUser;
 using Application.Features.Authentication.Dtos;
 using Application.Features.Authentication.Validators;
+using Application.Features.PasswordManagement.Dtos;
+using Application.Features.PasswordManagement.Validators;
+using Application.Features.UserManagement.Dtos;
+using Application.Features.UserManagement.Validators;
 using Application.Interfaces;
 using Domain.Entities;
 using FluentValidation;
@@ -35,6 +39,10 @@ namespace Infrastructure.DependencyInjection
 
             services.AddScoped<IValidator<RegistrationDto>, RegistrationDtoValidator>();
             services.AddScoped<IValidator<LoginDto>, LoginDtoValidator>();
+            services.AddScoped<IValidator<ChangePasswordDto>, ChangePasswordDtoValidator>();
+            services.AddScoped<IValidator<ResetPasswordDto>, ResetPasswordDtoValidator>();
+            services.AddScoped<IValidator<UpdateUserDto>, UpdateUserDtoValidator>();
+            services.AddScoped<IValidator<ChangeUserRoleDto>, ChangeUserRoleDtoValidator>();
             // Register application services
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<ICookieService, CookieService>();

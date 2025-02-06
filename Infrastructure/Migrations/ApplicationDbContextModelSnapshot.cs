@@ -198,6 +198,9 @@ namespace Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsFeatured")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -208,6 +211,9 @@ namespace Infrastructure.Migrations
                     b.Property<string>("SKU")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("SalesCount")
+                        .HasColumnType("int");
 
                     b.Property<int>("Stock")
                         .HasColumnType("int");
@@ -265,6 +271,36 @@ namespace Infrastructure.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("ProductImages");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Review", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Comment")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("Domain.Entities.User", b =>
@@ -335,7 +371,7 @@ namespace Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
@@ -366,6 +402,10 @@ namespace Infrastructure.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
+                    b.HasIndex("PhoneNumber")
+                        .IsUnique()
+                        .HasFilter("[PhoneNumber] IS NOT NULL");
+
                     b.HasIndex("UserName")
                         .IsUnique()
                         .HasFilter("[UserName] IS NOT NULL");
@@ -378,12 +418,12 @@ namespace Infrastructure.Migrations
                             Id = "7e53a491-a9de-4c75-af44-ff3271a5176c",
                             AccessFailedCount = 0,
                             ChildrenCount = 0,
-                            ConcurrencyStamp = "5dfd06ee-0e7c-44a9-92c3-0c63b441db7c",
-                            DateCreated = new DateTime(2025, 2, 2, 17, 3, 36, 632, DateTimeKind.Utc).AddTicks(2364),
+                            ConcurrencyStamp = "a2019a2a-433e-4881-a07c-4496a44d217a",
+                            DateCreated = new DateTime(2025, 2, 6, 13, 11, 17, 568, DateTimeKind.Utc).AddTicks(8020),
                             Email = "super@admin.com",
                             EmailConfirmed = true,
                             FirstName = "Super",
-                            Gender = 2,
+                            Gender = 1,
                             HasChildren = false,
                             IsDeleted = false,
                             LastName = "Admin",
@@ -392,12 +432,57 @@ namespace Infrastructure.Migrations
                             NormalizedEmail = "SUPER@ADMIN.COM",
                             NormalizedUserName = "SUPER_ADMIN",
                             Online = false,
-                            PasswordHash = "AQAAAAIAAYagAAAAEJXOu25DcpLA+fM1mNlcK8uZ+EtDDegqzoPWljdhfajBz9+5biwYdcTs5dMqe1tzyA==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "069f7db7-876c-40ba-bacd-f2bd82514e93",
+                            PasswordHash = "AQAAAAIAAYagAAAAEAWnrfbw77IcTaTmO+JvRB97JeqoNvtZWNpOMfPFSlKKM58pHcKejU8kGfj/Cwws8g==",
+                            PhoneNumber = "01234567891",
+                            PhoneNumberConfirmed = true,
+                            SecurityStamp = "7db61b56-b425-46f4-9f43-b304200a7608",
                             TwoFactorEnabled = false,
                             UserName = "super_admin"
                         });
+                });
+
+            modelBuilder.Entity("Domain.Entities.Wishlist", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Wishlists");
+                });
+
+            modelBuilder.Entity("Domain.Entities.WishlistItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("AddedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("SnapShotPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid>("WishlistId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("WishlistId");
+
+                    b.ToTable("WishlistItems");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -439,7 +524,7 @@ namespace Infrastructure.Migrations
                             Id = "b332b209-871f-45fc-9a8d-f357f9bff3b1",
                             ConcurrencyStamp = "2",
                             Name = "User",
-                            NormalizedName = "CUSTOMER"
+                            NormalizedName = "USER"
                         });
                 });
 
@@ -691,6 +776,36 @@ namespace Infrastructure.Migrations
                     b.Navigation("RefreshTokens");
                 });
 
+            modelBuilder.Entity("Domain.Entities.Wishlist", b =>
+                {
+                    b.HasOne("Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Domain.Entities.WishlistItem", b =>
+                {
+                    b.HasOne("Domain.Entities.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Wishlist", "Wishlist")
+                        .WithMany("WishlistItems")
+                        .HasForeignKey("WishlistId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("Wishlist");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -763,6 +878,11 @@ namespace Infrastructure.Migrations
                 {
                     b.Navigation("Cart")
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Entities.Wishlist", b =>
+                {
+                    b.Navigation("WishlistItems");
                 });
 #pragma warning restore 612, 618
         }

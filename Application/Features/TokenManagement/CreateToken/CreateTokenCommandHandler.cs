@@ -36,11 +36,8 @@ namespace Application.Features.TokenManagement.CreateToken
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim(JwtRegisteredClaimNames.Name, user.UserName),
-                new Claim(ClaimTypes.NameIdentifier, user.Id),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Name, user.UserName)
-            }.Union(userClaim).Union(roleClaims);
+                new Claim(JwtRegisteredClaimNames.Name, user.UserName)
+            }.Union(roleClaims);
 
             var signingCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwt.SigningKey)),
                 SecurityAlgorithms.HmacSha256);

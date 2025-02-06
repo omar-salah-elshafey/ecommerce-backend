@@ -18,6 +18,9 @@ namespace Infrastructure.Data
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<ProductCategory> ProductCategories { get; set; }
+        public DbSet<Review> Reviews { get; set; }
+        public DbSet<Wishlist> Wishlists { get; set; }
+        public DbSet<WishlistItem> WishlistItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -34,11 +37,13 @@ namespace Infrastructure.Data
                 .HasColumnType("decimal(18,2)");
 
             builder.Entity<ProductImage>().HasQueryFilter(pi => !pi.IsDeleted);
+            builder.Entity<Review>().HasQueryFilter(r => !r.IsDeleted);
             // Indexes
             builder.Entity<User>(entity =>
             {
                 entity.HasIndex(u => u.Email).IsUnique();
                 entity.HasIndex(u => u.UserName).IsUnique();
+                entity.HasIndex(u => u.PhoneNumber).IsUnique();
                 entity.HasIndex(u => u.IsDeleted);
                 entity.HasQueryFilter(u => !u.IsDeleted);
             });
@@ -75,6 +80,11 @@ namespace Infrastructure.Data
             builder.Entity<CartItem>(entity =>
             {
                 entity.HasIndex(ci => ci.ProductId);
+            });
+
+            builder.Entity<WishlistItem>(entity =>
+            {
+                entity.HasIndex(wi => wi.ProductId);
             });
 
             builder.Entity<Address>(entity =>

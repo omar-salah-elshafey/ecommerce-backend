@@ -5,6 +5,7 @@ using Domain.Entities;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -24,10 +25,13 @@ namespace Application.Features.Authentication.Commands.RegisterUser
             var role = registrationDto.Role;
             //check if user exists
             if (await _userManager.FindByEmailAsync(registrationDto.Email) is not null)
-                throw new DuplicateEmailException("This Email is already used!");
+                throw new DuplicateValueException("البريد الإلكتروني هذا مستخدم بالفعل!");
             
             if (await _userManager.FindByNameAsync(registrationDto.UserName) is not null)
-                throw new DuplicateUsernameException("This Username is already used!");
+                throw new DuplicateValueException("اسم المستخدم هذا مستخدم بالفعل!");
+
+            if (await _userManager.Users.AnyAsync(u => u.PhoneNumber == registrationDto.PhoneNumber))
+                throw new DuplicateValueException("رقم الهاتف هذا مستخدم بالفعل!");
 
             // Create the new user
             var user = new User
@@ -47,7 +51,7 @@ namespace Application.Features.Authentication.Commands.RegisterUser
             if (!result.Succeeded)
             {
                 var errors = string.Join(Environment.NewLine, result.Errors.Select(e => e.Description));
-                throw new UserCreationException($"Failed to create user: {errors}");
+                throw new UserCreationException($"حدث خطأ أثناء التسجيل: {errors}");
             }
             // Assign the user to the specified role
             await _userManager.AddToRoleAsync(user, registrationDto.Role.ToString());
@@ -58,10 +62,10 @@ namespace Application.Features.Authentication.Commands.RegisterUser
             // Dynamically get the expiration time from the options
             var expirationTime = _tokenProviderOptions.Value.TokenLifespan.TotalMinutes;
 
-            //await _emailService.SendEmailAsync(user.Email, "Email Verification Code.",
-            //    $"Hello {user.UserName}, Use this new token to verify your Email: {token}{Environment.NewLine}This code is Valid only for {expirationTime} Minutes.");
-            _logger.LogInformation("A verification code has been sent to your Email." +
-                $"{Environment.NewLine}Verify Your Email to be able to login :) ");
+            //await _emailService.SendEmailAsync(user.Email, "رمز التحقق من البريد الإلكتروني.",
+            //    $"أهلا يا  {user.UserName}, استخدم هذا الرمز لتفعيل حسابك: {token}{Environment.NewLine}هذا الرمز صالح لمدة: {expirationTime} دقائق فقط.");
+            _logger.LogInformation("تم إرسال رمز التفعيل إلى بريدك." +
+                $"{Environment.NewLine}قم بتفعيل الحساب لتستطيع استخدامه.");
             return new AuthResponseModel
             {
                 Email = user.Email,

@@ -23,9 +23,9 @@ namespace Application.Features.Authentication.Commands.Login
             var user = await _userManager.FindByNameAsync(loginDto.EmailOrUserName)
                ?? await _userManager.FindByEmailAsync(loginDto.EmailOrUserName);
             if (user == null || !await _userManager.CheckPasswordAsync(user, loginDto.Password))
-                throw new InvalidCredentialsException("Invalid Email or Password!");
+                throw new InvalidCredentialsException("خطأ في اسم المستخدم أو كلمة المرور!");
             if (!user.EmailConfirmed)
-                throw new EmailNotConfirmedException("Please Confirm Your Email First.");
+                throw new EmailNotConfirmedException("برجاء تفعيل الحساب أولا.");
             var jwtSecurityToken = await _mediator.Send(new CreateTokenCommand(user));
             authResponseModel.Email = user.Email;
             authResponseModel.ExpiresAt = jwtSecurityToken.ValidTo.ToLocalTime();
