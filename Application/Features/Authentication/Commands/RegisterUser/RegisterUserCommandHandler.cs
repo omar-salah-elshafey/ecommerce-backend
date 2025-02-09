@@ -1,6 +1,7 @@
 ﻿using Application.ExceptionHandling;
 using Application.Features.Authentication.Dtos;
 using Application.Interfaces;
+using AutoMapper;
 using Domain.Entities;
 using FluentValidation;
 using MediatR;
@@ -12,7 +13,8 @@ using Microsoft.Extensions.Options;
 namespace Application.Features.Authentication.Commands.RegisterUser
 {
     public class RegisterUserCommandHandler(UserManager<User> _userManager, ILogger<RegisterUserCommandHandler> _logger,
-    IValidator<RegistrationDto> _validator, IOptions<DataProtectionTokenProviderOptions> _tokenProviderOptions, IEmailService _emailService)
+    IValidator<RegistrationDto> _validator, IOptions<DataProtectionTokenProviderOptions> _tokenProviderOptions,
+    IEmailService _emailService, IMapper _mapper)
     : IRequestHandler<RegisterUserCommand, AuthResponseModel>
     {
         public async Task<AuthResponseModel> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
@@ -34,19 +36,7 @@ namespace Application.Features.Authentication.Commands.RegisterUser
                 throw new DuplicateValueException("رقم الهاتف هذا مستخدم بالفعل!");
 
             // Create the new user
-            var user = new User
-            {
-                FirstName = registrationDto.FirstName,
-                LastName = registrationDto.LastName,
-                UserName = registrationDto.UserName,
-                Email = registrationDto.Email,
-                PhoneNumber = registrationDto.PhoneNumber,
-                Gender = registrationDto.Gender,
-                MaritalStatus = registrationDto.MaritalStatus,
-                HasChildren = registrationDto.HasChildren,
-                ChildrenCount = registrationDto.HasChildren ? registrationDto.ChildrenCount : 0
-
-            };
+            var user = _mapper.Map<User>(registrationDto);
             var result = await _userManager.CreateAsync(user, registrationDto.Password);
             if (!result.Succeeded)
             {

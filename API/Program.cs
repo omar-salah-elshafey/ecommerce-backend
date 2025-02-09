@@ -1,9 +1,11 @@
 using API.Middleware;
 using Application.Configurations;
+using Application.Mappings;
 using Infrastructure.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Reflection;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -44,6 +46,7 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.Configure<JWT>(builder.Configuration.GetSection("JwtOptions"));
 var jwtOptions = builder.Configuration.GetSection("JwtOptions").Get<JWT>();
+builder.Services.AddAutoMapper(Assembly.GetAssembly(typeof(UserProfile)));
 
 builder.Services.AddAuthentication(
     options =>

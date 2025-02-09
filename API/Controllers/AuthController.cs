@@ -15,7 +15,7 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController(IMediator _mediator, ICookieService _cookieService) : ControllerBase
+    public class AuthController(IMediator _mediator, ICookieService _cookieService, ILogger<AuthController> _logger) : ControllerBase
     {
         [HttpPost("register-user")]
         public async Task<IActionResult> RegisterUserAsync([FromBody] RegistrationDto registrationDto)
@@ -77,9 +77,11 @@ namespace API.Controllers
         [HttpGet("refreshtoken")]
         public async Task<IActionResult> RefreshToken(string? refreshToken)
         {
+            _logger.LogInformation("refreshToken from the frontend: " + refreshToken);
             if (refreshToken is null)
             {
                 refreshToken = Request.Cookies["refreshToken"];
+                _logger.LogInformation("refreshToken from the backend: " + refreshToken);
             }
 
             var result = await _mediator.Send(new RefreshTokenCommand(refreshToken));

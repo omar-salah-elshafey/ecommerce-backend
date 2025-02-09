@@ -1,5 +1,6 @@
 ﻿using Application.Features.UserManagement.Dtos;
 using Application.Models;
+using AutoMapper;
 using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -7,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.Features.UserManagement.Queries.GetUsers
 {
-    public class GetUsersQueryHandler(UserManager<User> _userManager) : IRequestHandler<GetUsersQuery, PaginatedResponseModel<UserDto>>
+    public class GetUsersQueryHandler(UserManager<User> _userManager, IMapper _mapper) : IRequestHandler<GetUsersQuery, PaginatedResponseModel<UserDto>>
     {
         public async Task<PaginatedResponseModel<UserDto>> Handle(GetUsersQuery request, CancellationToken cancellationToken)
         {
@@ -20,21 +21,12 @@ namespace Application.Features.UserManagement.Queries.GetUsers
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
-            var userDtos = new List<UserDto>();
-            foreach (var user in users)
+            var userDtos = _mapper.Map<List<UserDto>>(users);
+
+            foreach (var userDto in userDtos)
             {
-                var role = (await _userManager.GetRolesAsync(user)).FirstOrDefault();
-                userDtos.Add(new UserDto
-                {
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    UserName = user.UserName,
-                    Email = user.Email,
-                    Role = role,
-                    Gender = user.Gender.ToString(),
-                    MaritalStatus = user.MaritalStatus.ToString(),
-                    ChildrenCount = user.ChildrenCount,
-                });
+                var user = users.First(u => u.UserName == userDto.UserName);
+                userDto.Role = (await _userManager.GetRolesAsync(user)).FirstOrDefault();
             }
             return new PaginatedResponseModel<UserDto>
             {

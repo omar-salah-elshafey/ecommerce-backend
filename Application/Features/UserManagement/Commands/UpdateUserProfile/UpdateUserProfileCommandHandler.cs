@@ -2,6 +2,7 @@
 using Application.Features.TokenManagement.GetUsernameFromToken;
 using Application.Features.TokenManagement.GetUserRoleFromToken;
 using Application.Features.UserManagement.Dtos;
+using AutoMapper;
 using Domain.Entities;
 using FluentValidation;
 using MediatR;
@@ -11,7 +12,7 @@ using Microsoft.Extensions.Logging;
 namespace Application.Features.UserManagement.Commands.UpdateUserProfile
 {
     public class UpdateUserProfileCommandHandler(UserManager<User> _userManager, ILogger<UpdateUserProfileCommandHandler> _logger, 
-        IMediator _mediator, IValidator<UpdateUserDto> _validator)
+        IMediator _mediator, IValidator<UpdateUserDto> _validator, IMapper _mapper)
         : IRequestHandler<UpdateUserProfileCommand, UserDto>
     {
         public async Task<UserDto> Handle(UpdateUserProfileCommand request, CancellationToken cancellationToken)
@@ -30,11 +31,7 @@ namespace Application.Features.UserManagement.Commands.UpdateUserProfile
             _logger.LogInformation($"current UserNAme: {currentUserName}, Admin? {isAdmin}");
             if (!currentUserName.Equals(userName) && !isAdmin)
                 throw new ForbiddenAccessException("لا يمكنك إتمام هذه العملية!");
-            user.FirstName = updateUserDto.FirstName;
-            user.LastName = updateUserDto.LastName;
-            user.MaritalStatus = updateUserDto.MaritalStatus;
-            user.HasChildren = updateUserDto.HasChildren;
-            user.ChildrenCount = updateUserDto.ChildrenCount;
+            _mapper.Map(updateUserDto, user);
             var result = await _userManager.UpdateAsync(user);
             if (!result.Succeeded)
             {
@@ -43,17 +40,10 @@ namespace Application.Features.UserManagement.Commands.UpdateUserProfile
             }
             _logger.LogInformation("User has been updated Successfully.");
 
-            return new UserDto
-            {
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                UserName = userName,
-                Email = user.Email,
-                Role = (await _userManager.GetRolesAsync(user)).First(),
-                Gender = user.Gender.ToString(),
-                MaritalStatus = user.MaritalStatus.ToString(),
-                ChildrenCount = user.ChildrenCount,
-            };
+            var updatedUser = _mapper.Map<UserDto>(user);
+            updatedUser.Role = (await _userManager.GetRolesAsync(user)).First();
+
+            return updatedUser;
         }
     }
 }

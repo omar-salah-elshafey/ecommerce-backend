@@ -1,12 +1,13 @@
 ﻿using Application.ExceptionHandling;
 using Application.Features.UserManagement.Dtos;
+using AutoMapper;
 using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 
 namespace Application.Features.UserManagement.Queries.GetUserProfile
 {
-    public class GetUserProfileQueryHnadler(UserManager<User> _userManager) : IRequestHandler<GetUserProfileQuery, UserDto>
+    public class GetUserProfileQueryHnadler(UserManager<User> _userManager, IMapper _mapper) : IRequestHandler<GetUserProfileQuery, UserDto>
     {
         public async Task<UserDto> Handle(GetUserProfileQuery request, CancellationToken cancellationToken)
         {
@@ -17,17 +18,9 @@ namespace Application.Features.UserManagement.Queries.GetUserProfile
             if (user == null)
                 throw new NotFoundException("المستخدم غير موجود!!");
             var role = (await _userManager.GetRolesAsync(user)).FirstOrDefault();
-            return new UserDto
-            {
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                UserName = user.UserName,
-                Email = user.Email,
-                Role = role,
-                Gender = user.Gender.ToString(),
-                MaritalStatus = user.MaritalStatus.ToString(),
-                ChildrenCount = user.ChildrenCount,
-            };
+            var userDto = _mapper.Map<UserDto>(user);
+            userDto.Role = role;
+            return userDto;
         }
     }
 }
