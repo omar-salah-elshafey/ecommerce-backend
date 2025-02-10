@@ -19,5 +19,6 @@ namespace Domain.Entities
         public bool IsDeleted { get; set; } = false;
         public List<RefreshToken>? RefreshTokens { get; set; }
         public Cart Cart { get; set; }
+        public Wishlist Wishlist { get; set; }
     }
 }

@@ -63,6 +63,10 @@ namespace Infrastructure.Data
                 entity.HasIndex(c => c.ParentCategoryId);
                 entity.HasIndex(c => c.IsDeleted);
                 entity.HasQueryFilter(c => !c.IsDeleted);
+                entity.HasMany(c => c.SubCategories)
+                  .WithOne()
+                  .HasForeignKey(c => c.ParentCategoryId)
+                  .OnDelete(DeleteBehavior.Restrict);
             });
 
             builder.Entity<Order>(entity =>
@@ -81,7 +85,25 @@ namespace Infrastructure.Data
             {
                 entity.HasIndex(ci => ci.ProductId);
             });
+            builder.Entity<Review>(entity =>
+            {
+                entity.HasOne(r => r.User)
+                      .WithMany()
+                      .HasForeignKey(r => r.UserId)
+                      .OnDelete(DeleteBehavior.Cascade);
 
+                entity.HasOne(r => r.Product)
+                      .WithMany()
+                      .HasForeignKey(r => r.ProductId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+            builder.Entity<Wishlist>(entity =>
+            {
+                entity.HasOne(w => w.User)
+                      .WithOne(u => u.Wishlist)
+                      .HasForeignKey<Wishlist>(w => w.UserId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
             builder.Entity<WishlistItem>(entity =>
             {
                 entity.HasIndex(wi => wi.ProductId);
