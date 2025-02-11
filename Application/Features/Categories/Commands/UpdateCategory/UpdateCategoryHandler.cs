@@ -29,7 +29,7 @@ namespace Application.Features.Categories.Commands.UpdateCategory
                     throw new NotFoundException("Invalid Parent Category");
                 category.ParentCategoryId = updateDto.ParentCategoryId;
             }
-            category.Name = updateDto.Name;
+            category.Name = updateDto.Name.Trim();
             await _categoryRepository.UpdateAsync(category);
             return _mapper.Map<CategoryDto>(category);
         }

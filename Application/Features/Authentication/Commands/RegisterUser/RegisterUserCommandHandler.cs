@@ -26,18 +26,18 @@ namespace Application.Features.Authentication.Commands.RegisterUser
             
             var role = registrationDto.Role;
             //check if user exists
-            if (await _userManager.FindByEmailAsync(registrationDto.Email) is not null)
+            if (await _userManager.FindByEmailAsync(registrationDto.Email.Trim()) is not null)
                 throw new DuplicateValueException("البريد الإلكتروني هذا مستخدم بالفعل!");
             
-            if (await _userManager.FindByNameAsync(registrationDto.UserName) is not null)
+            if (await _userManager.FindByNameAsync(registrationDto.UserName.Trim()) is not null)
                 throw new DuplicateValueException("اسم المستخدم هذا مستخدم بالفعل!");
 
-            if (await _userManager.Users.AnyAsync(u => u.PhoneNumber == registrationDto.PhoneNumber))
+            if (await _userManager.Users.AnyAsync(u => u.PhoneNumber == registrationDto.PhoneNumber.Trim()))
                 throw new DuplicateValueException("رقم الهاتف هذا مستخدم بالفعل!");
 
             // Create the new user
             var user = _mapper.Map<User>(registrationDto);
-            var result = await _userManager.CreateAsync(user, registrationDto.Password);
+            var result = await _userManager.CreateAsync(user, registrationDto.Password.Trim());
             if (!result.Succeeded)
             {
                 var errors = string.Join(Environment.NewLine, result.Errors.Select(e => e.Description));

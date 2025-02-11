@@ -12,5 +12,6 @@ namespace Application.Interfaces.IRepositories
         Task AddAsync(Category category);
         Task UpdateAsync(Category category);
         Task DeleteAsync(Category category);
+        Task<List<Category>> GetCategoriesByIdsAsync(List<Guid> categoryIds);
     }
 }

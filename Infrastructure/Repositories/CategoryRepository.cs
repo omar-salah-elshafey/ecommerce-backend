@@ -61,5 +61,12 @@ namespace Infrastructure.Repositories
         {
             return await _context.Categories.CountAsync();
         }
+
+        public async Task<List<Category>> GetCategoriesByIdsAsync(List<Guid> categoryIds)
+        {
+            return await _context.Categories
+                .Where(c => categoryIds.Contains(c.Id))
+                .ToListAsync();
+        }
     }
 }

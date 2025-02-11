@@ -20,9 +20,9 @@ namespace Application.Features.Authentication.Commands.Login
             _logger.LogInformation("Starting the Login Process....");
             var loginDto = request.loginDto;
             var authResponseModel = new AuthResponseModel();
-            var user = await _userManager.FindByNameAsync(loginDto.EmailOrUserName)
-               ?? await _userManager.FindByEmailAsync(loginDto.EmailOrUserName);
-            if (user == null || !await _userManager.CheckPasswordAsync(user, loginDto.Password))
+            var user = await _userManager.FindByNameAsync(loginDto.EmailOrUserName.Trim())
+               ?? await _userManager.FindByEmailAsync(loginDto.EmailOrUserName.Trim());
+            if (user == null || !await _userManager.CheckPasswordAsync(user, loginDto.Password.Trim()))
                 throw new InvalidCredentialsException("خطأ في اسم المستخدم أو كلمة المرور!");
             if (!user.EmailConfirmed)
                 throw new EmailNotConfirmedException("برجاء تفعيل الحساب أولا.");

@@ -191,6 +191,9 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -220,6 +223,8 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CategoryId");
+
                     b.HasIndex("IsDeleted");
 
                     b.HasIndex("Name");
@@ -232,21 +237,6 @@ namespace Infrastructure.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("Domain.Entities.ProductCategory", b =>
-                {
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("CategoryId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("ProductId", "CategoryId");
-
-                    b.HasIndex("CategoryId");
-
-                    b.ToTable("ProductCategories");
-                });
-
             modelBuilder.Entity("Domain.Entities.ProductImage", b =>
                 {
                     b.Property<Guid>("Id")
@@ -256,9 +246,6 @@ namespace Infrastructure.Migrations
                     b.Property<string>("ImageUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
 
                     b.Property<bool>("IsMain")
                         .HasColumnType("bit");
@@ -423,8 +410,8 @@ namespace Infrastructure.Migrations
                             Id = "7e53a491-a9de-4c75-af44-ff3271a5176c",
                             AccessFailedCount = 0,
                             ChildrenCount = 0,
-                            ConcurrencyStamp = "6bc4b012-465c-4b53-b8f0-e7f290a3cdd8",
-                            DateCreated = new DateTime(2025, 2, 10, 11, 51, 26, 807, DateTimeKind.Utc).AddTicks(6858),
+                            ConcurrencyStamp = "663f22ef-a395-4787-9684-0a2185bdaa0b",
+                            DateCreated = new DateTime(2025, 2, 11, 11, 8, 13, 511, DateTimeKind.Utc).AddTicks(6570),
                             Email = "super@admin.com",
                             EmailConfirmed = true,
                             FirstName = "Super",
@@ -437,10 +424,10 @@ namespace Infrastructure.Migrations
                             NormalizedEmail = "SUPER@ADMIN.COM",
                             NormalizedUserName = "SUPER_ADMIN",
                             Online = false,
-                            PasswordHash = "AQAAAAIAAYagAAAAEPYsGeZhStFMoxqXtma4jHXRW3wrpCfNYDlCSAoIE01AYX+3R0PxYBvMT3UBk74SdA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJOwcQlUKqJ12U7YTFxquhKn5LdZ7K0F1SIOdyDRKktJzxs5NBth6OQtz5sygX2GlA==",
                             PhoneNumber = "01234567891",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "76d95f8d-b54b-4f3b-8646-4b23a899a54d",
+                            SecurityStamp = "71c71291-f1be-4c2a-b5f7-dfb05bf9b876",
                             TwoFactorEnabled = false,
                             UserName = "super_admin"
                         });
@@ -723,23 +710,15 @@ namespace Infrastructure.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("Domain.Entities.ProductCategory", b =>
+            modelBuilder.Entity("Domain.Entities.Product", b =>
                 {
                     b.HasOne("Domain.Entities.Category", "Category")
-                        .WithMany("ProductCategories")
+                        .WithMany("Products")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.Product", "Product")
-                        .WithMany("ProductCategories")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Category");
-
-                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Domain.Entities.ProductImage", b =>
@@ -897,7 +876,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Category", b =>
                 {
-                    b.Navigation("ProductCategories");
+                    b.Navigation("Products");
 
                     b.Navigation("SubCategories");
                 });
@@ -905,8 +884,6 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.Product", b =>
                 {
                     b.Navigation("Images");
-
-                    b.Navigation("ProductCategories");
                 });
 
             modelBuilder.Entity("Domain.Entities.User", b =>

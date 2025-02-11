@@ -5,6 +5,10 @@ using Application.Features.Categories.Dtos;
 using Application.Features.Categories.Validators;
 using Application.Features.PasswordManagement.Dtos;
 using Application.Features.PasswordManagement.Validators;
+using Application.Features.Products.Dtos;
+using Application.Features.Products.Validators;
+using Application.Features.Reviews.Dtos;
+using Application.Features.Reviews.Validators;
 using Application.Features.UserManagement.Dtos;
 using Application.Features.UserManagement.Validators;
 using Application.Interfaces;
@@ -49,11 +53,19 @@ namespace Infrastructure.DependencyInjection
             services.AddScoped<IValidator<ChangeUserRoleDto>, ChangeUserRoleDtoValidator>();
             services.AddScoped<IValidator<CreateCategoryDto>, CreateCategoryValidator>();
             services.AddScoped<IValidator<UpdateCategoryDto>, UpdateCategoryValidator>();
-            // Register application services 
+            services.AddScoped<IValidator<CreateProductDto>, CreateProductDtoValidator>();
+            services.AddScoped<IValidator<UpdateProductDto>, UpdateProductDtoValidator>();
+            services.AddScoped<IValidator<CreateReviewDto>, CreateReviewDtoValidator>();
+            services.AddScoped<IValidator<UpdateReviewDto>, UpdateReviewDtoValidator>();
+            // Register application services
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<ICookieService, CookieService>();
-            // Register application repositories
+            // Register application repositories 
             services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IReviewRepository, ReviewRepository>();
+            services.AddScoped<IFileService, FileService>();
+            services.AddScoped<IImageService, ImageService>();
 
             return services;
         }

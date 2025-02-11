@@ -24,7 +24,7 @@ namespace Application.Features.Categories.Commands.CreateCategory
                 if (parentCategory is null)
                     throw new NotFoundException("Invalid Parent Category");
             }
-            var category = new Category { Id = Guid.NewGuid(), Name = createDto.Name, ParentCategoryId = createDto.ParentCategoryId };
+            var category = new Category { Id = Guid.NewGuid(), Name = createDto.Name.Trim(), ParentCategoryId = createDto.ParentCategoryId };
             await _categoryRepository.AddAsync(category);
             return _mapper.Map<CategoryDto>(category);
         }

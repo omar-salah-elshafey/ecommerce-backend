@@ -15,7 +15,7 @@ namespace Application.Features.PasswordManagement.Commands.ResetPasswordRequest
     {
         public async Task Handle(ResetPasswordRequestCommand request, CancellationToken cancellationToken)
         {
-            var email = request.email;
+            var email = request.email.Trim();
             var user = await _userManager.FindByEmailAsync(email);
             if (user is null)
                 throw new NotFoundException("البريد الإلكتروني غير صالح!");

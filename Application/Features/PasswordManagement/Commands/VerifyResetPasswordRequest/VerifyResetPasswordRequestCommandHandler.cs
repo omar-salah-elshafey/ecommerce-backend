@@ -13,12 +13,12 @@ namespace Application.Features.PasswordManagement.Commands.VerifyResetPasswordRe
             CancellationToken cancellationToken)
         {
             var confirmEmailDto = request.ConfirmEmailDto;
-            var user = await _userManager.FindByEmailAsync(confirmEmailDto.Email);
+            var user = await _userManager.FindByEmailAsync(confirmEmailDto.Email.Trim());
             if (user == null)
                 throw new NotFoundException("البريد الإلكتروني غير صالح!");
 
             var result = await _userManager.VerifyUserTokenAsync(user,
-                _userManager.Options.Tokens.PasswordResetTokenProvider, "ResetPassword", confirmEmailDto.Token);
+                _userManager.Options.Tokens.PasswordResetTokenProvider, "ResetPassword", confirmEmailDto.Token.Trim());
             if (!result)
                 throw new InvalidTokenException("الرمز غير صالح!");
 

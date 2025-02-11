@@ -17,7 +17,6 @@ namespace Infrastructure.Data
         public DbSet<CartItem> CartItems { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
-        public DbSet<ProductCategory> ProductCategories { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Wishlist> Wishlists { get; set; }
         public DbSet<WishlistItem> WishlistItems { get; set; }
@@ -26,8 +25,6 @@ namespace Infrastructure.Data
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<ProductCategory>()
-                .HasKey(pc => new { pc.ProductId, pc.CategoryId });
 
             builder.Entity<User>()
                 .OwnsMany(u => u.RefreshTokens);
@@ -36,7 +33,6 @@ namespace Infrastructure.Data
                 .Property(p => p.Price)
                 .HasColumnType("decimal(18,2)");
 
-            builder.Entity<ProductImage>().HasQueryFilter(pi => !pi.IsDeleted);
             builder.Entity<Review>().HasQueryFilter(r => !r.IsDeleted);
             // Indexes
             builder.Entity<User>(entity =>
@@ -55,6 +51,9 @@ namespace Infrastructure.Data
                 entity.HasIndex(p => p.Price);
                 entity.HasIndex(p => p.IsDeleted);
                 entity.HasQueryFilter(p => !p.IsDeleted);
+                entity.HasOne(p => p.Category)
+                    .WithMany(c => c.Products)
+                    .HasForeignKey(p => p.CategoryId);
             });
 
             builder.Entity<Category>(entity =>

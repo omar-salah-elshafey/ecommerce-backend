@@ -17,16 +17,16 @@ namespace Application.Features.PasswordManagement.Commands.ChangePassword
             var validationResult = await _validator.ValidateAsync(changePasswordDto);
             if (!validationResult.IsValid)
                 throw new ValidationException(validationResult.Errors);
-            var user = await _userManager.FindByEmailAsync(changePasswordDto.Email);
+            var user = await _userManager.FindByEmailAsync(changePasswordDto.Email.Trim());
             if (user == null)
                 throw new NotFoundException("البريد الإلكتروني غير صالح!");
 
-            if (changePasswordDto.CurrentPassword.Equals(changePasswordDto.NewPassword))
+            if (changePasswordDto.CurrentPassword.Trim().Equals(changePasswordDto.NewPassword.Trim()))
                 throw new InvalidInputsException("لا يمكن أن تكون كلمات المرور القديمة والجديدة متطابقة!");
 
 
             var result = await _userManager.ChangePasswordAsync(user,
-                changePasswordDto.CurrentPassword, changePasswordDto.NewPassword);
+                changePasswordDto.CurrentPassword.Trim(), changePasswordDto.NewPassword.Trim());
             if (!result.Succeeded)
                 throw new InvalidInputsException("كلمة المرور غير صحيحة!");
 

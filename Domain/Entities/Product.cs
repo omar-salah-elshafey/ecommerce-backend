@@ -15,8 +15,9 @@ namespace Domain.Entities
         public int Stock { get; set; }
         public string SKU { get; set; }
         public bool IsDeleted { get; set; }
-        public List<ProductImage> Images { get; set; }
-        public ICollection<ProductCategory> ProductCategories { get; set; }
+        public Guid CategoryId { get; set; }
+        public Category Category { get; set; }
+        public List<ProductImage> Images { get; set; } = new List<ProductImage>();
         public bool IsFeatured { get; set; }
         public int SalesCount { get; set; }
     }

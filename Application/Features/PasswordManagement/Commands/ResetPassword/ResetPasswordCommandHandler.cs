@@ -17,11 +17,11 @@ namespace Application.Features.PasswordManagement.Commands.ResetPassword
             var validationResult = await _validator.ValidateAsync(resetPasswordDto);
             if (!validationResult.IsValid)
                 throw new ValidationException(validationResult.Errors);
-            var user = await _userManager.FindByEmailAsync(resetPasswordDto.Email);
+            var user = await _userManager.FindByEmailAsync(resetPasswordDto.Email.Trim());
             if (user == null)
                 throw new NotFoundException("البريد الإلكتروني غير صالح!");
 
-            var result = await _userManager.ResetPasswordAsync(user, resetPasswordDto.Token, resetPasswordDto.NewPassword);
+            var result = await _userManager.ResetPasswordAsync(user, resetPasswordDto.Token.Trim(), resetPasswordDto.NewPassword.Trim());
             if (!result.Succeeded)
                 throw new InvalidTokenException("الرمز غير صالح!");
 
