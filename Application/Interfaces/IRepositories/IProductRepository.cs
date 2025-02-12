@@ -7,6 +7,8 @@ namespace Application.Interfaces.IRepositories
     {
         Task<Product?> GetByIdAsync(Guid id);
         Task<PaginatedResponseModel<Product>> GetAllAsync(int pageNumber, int pageSize);
+        Task<PaginatedResponseModel<Product>> GetByCategoryIdAsync(Guid categoryId, int pageNumber, int pageSize);
+        Task<PaginatedResponseModel<Product>> GetByNameAsync(string query, int pageNumber, int pageSize);
         Task<int> GetCountAsync();
         Task AddAsync(Product product);
         Task UpdateAsync(Product product);

@@ -64,6 +64,7 @@ namespace Infrastructure.DependencyInjection
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IReviewRepository, ReviewRepository>();
+            services.AddScoped<IWishlistRepository, WishlistRepository>();
             services.AddScoped<IFileService, FileService>();
             services.AddScoped<IImageService, ImageService>();
 

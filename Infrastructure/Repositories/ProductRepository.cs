@@ -35,9 +35,49 @@ namespace Infrastructure.Repositories
             };
         }
 
-        public Task<int> GetCountAsync()
+        public async Task<PaginatedResponseModel<Product>> GetByCategoryIdAsync(Guid categoryId, int pageNumber, int pageSize)
         {
-            return _context.Products.CountAsync();
+            var totalItems = await _context.Products.CountAsync(p => p.CategoryId == categoryId);
+            var products = await _context.Products
+                .Where(p => p.CategoryId == categoryId)
+                .OrderByDescending(p => p.Name)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Include(p => p.Images)
+                .Include(p => p.Category)
+                .ToListAsync();
+            return new PaginatedResponseModel<Product>
+            {
+                TotalItems = totalItems,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                Items = products
+            };
+        }
+
+        public async Task<PaginatedResponseModel<Product>> GetByNameAsync(string query, int pageNumber, int pageSize)
+        {
+            var totalItems = await _context.Products.CountAsync(p => p.Name.ToLower().Contains(query.ToLower()));
+            var products = await _context.Products
+                .Where(p => p.Name.ToLower().Contains(query.ToLower()))
+                .OrderByDescending(p => p.Name)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Include(p => p.Images)
+                .Include(p => p.Category)
+                .ToListAsync();
+            return new PaginatedResponseModel<Product>
+            {
+                TotalItems = totalItems,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                Items = products
+            };
+        }
+
+        public async Task<int> GetCountAsync()
+        {
+            return await _context.Products.CountAsync();
         }
 
         public async Task AddAsync(Product product)

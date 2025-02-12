@@ -4,6 +4,7 @@ using Application.Features.Reviews.Commands.UpdateReview;
 using Application.Features.Reviews.Dtos;
 using Application.Features.Reviews.Queries.GetAllReviews;
 using Application.Features.Reviews.Queries.GetReviewById;
+using Application.Features.Reviews.Queries.GetReviewByPrroduct;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -35,6 +36,13 @@ namespace API.Controllers
         {
             var review = await _mediator.Send(new GetReviewByIdQuery(id));
             return Ok(review);
+        }
+
+        [HttpGet("get-review-by-product/{productId}")]
+        public async Task<IActionResult> GetReviewByProductAsync(Guid productId, int pageNumber = 1, int pageSize = 10)
+        {
+            var reviews = await _mediator.Send(new GetReviewByPrroductQuery(productId, pageNumber, pageSize));
+            return Ok(reviews);
         }
 
         [HttpPut("update-review/{id}")]
