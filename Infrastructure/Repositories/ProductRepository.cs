@@ -86,6 +86,12 @@ namespace Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public async Task AddProductImagesAsync(ProductImage productImage)
+        {
+            await _context.ProductImages.AddAsync(productImage);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task UpdateAsync(Product product)
         {
             _context.Products.Update(product);

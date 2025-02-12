@@ -13,6 +13,7 @@ namespace Domain.Entities
         public decimal Price { get; set; }
         [Required]
         public int Stock { get; set; }
+        public int MaxOrderQuantity { get; set; }
         public string SKU { get; set; }
         public bool IsDeleted { get; set; }
         public Guid CategoryId { get; set; }

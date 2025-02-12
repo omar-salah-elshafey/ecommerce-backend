@@ -35,6 +35,7 @@ namespace API.Controllers
         }
 
         [HttpPost("add-user")]
+        [Authorize(Roles ="Admin")]
         public async Task<IActionResult> AddUserAsync([FromBody] RegistrationDto registrationDto)
         {
             var result = await _mediator.Send(new RegisterUserCommand(registrationDto));

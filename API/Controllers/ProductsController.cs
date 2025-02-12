@@ -7,6 +7,7 @@ using Application.Features.Products.Queries.GetProductByCategory;
 using Application.Features.Products.Queries.GetProductById;
 using Application.Features.Products.Queries.SearchProductsByName;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -16,6 +17,7 @@ namespace API.Controllers
     public class ProductsController(IMediator _mediator) : ControllerBase
     {
         [HttpPost("add-product")]
+        [Authorize(Roles ="Admin")]
         public async Task<IActionResult> AddProductAsync([FromForm] CreateProductDto createProductDto)
         {
             var product = await _mediator.Send(new CreateProductCommand(createProductDto));
@@ -51,6 +53,7 @@ namespace API.Controllers
         }
 
         [HttpPut("update-product/{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateProductAsync(Guid id, [FromForm] UpdateProductDto updateProductDto)
         {
             var product = await _mediator.Send(new UpdateProductCommand(id, updateProductDto));
@@ -58,6 +61,7 @@ namespace API.Controllers
         }
 
         [HttpDelete("delete-product/{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteProductAsync(Guid id)
         {
             await _mediator.Send(new DeleteProductCommand(id));

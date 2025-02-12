@@ -12,7 +12,8 @@ using Microsoft.Extensions.Logging;
 namespace Application.Features.Products.Commands.CreateProduct
 {
     public class CreateProductCommandHandler(IProductRepository _productRepository, IMapper _mapper, IValidator<CreateProductDto> _validator,
-        IFileService _fileService, ICategoryRepository _categoryRepository, IHttpContextAccessor _httpContextAccessor, ILogger<CreateProductCommandHandler> _logger)
+        IFileService _fileService, ICategoryRepository _categoryRepository, IHttpContextAccessor _httpContextAccessor, 
+        ILogger<CreateProductCommandHandler> _logger)
         : IRequestHandler<CreateProductCommand, ProductDto>
     {
         public async Task<ProductDto> Handle(CreateProductCommand request, CancellationToken cancellationToken)
@@ -29,6 +30,7 @@ namespace Application.Features.Products.Commands.CreateProduct
                 Description = dto.Description.Trim(),
                 Price = dto.Price,
                 Stock = dto.Stock,
+                MaxOrderQuantity = dto.MaxOrderQuantity,
                 SKU = dto.SKU.Trim(),
                 IsFeatured = dto.IsFeatured,
                 SalesCount = 0,
@@ -56,7 +58,6 @@ namespace Application.Features.Products.Commands.CreateProduct
                 }
                 var categoryId = dto.CategoryId;
                 var category = await _categoryRepository.GetByIdAsync(categoryId);
-                _logger.LogInformation($"The provided CatID: {categoryId}");
                 if (category is null)
                     throw new NotFoundException($"Category not found! {categoryId}");
                 product.CategoryId = categoryId;

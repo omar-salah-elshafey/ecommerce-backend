@@ -60,26 +60,22 @@ namespace Application.Features.Products.Commands.UpdateProduct
                 {
                     if (product.Images.Count + dto.NewImages.Count > 6)
                         throw new ValidationException("Maximum 6 images allowed");
+
                     foreach (var file in dto.NewImages)
                     {
                         string imageUrl = await _fileService.UploadFileAsync(file);
                         uploadedFiles.Add(imageUrl);
-                        product.Images.Add(new ProductImage
+                        var productImage = new ProductImage
                         {
                             Id = Guid.NewGuid(),
                             ImageUrl = imageUrl,
                             ProductId = product.Id,
-                        });
+                        };
+                        product.Images.Add(productImage);
+                        await _productRepository.AddProductImagesAsync(productImage);
                     }
                 }
-                if (!product.Images.Any(img => img.IsMain))
-                {
-                    var firstImage = product.Images.FirstOrDefault();
-                    if (firstImage != null)
-                        firstImage.IsMain = true;
-                }
-                await _productRepository.UpdateAsync(product);
-
+                
             }
             catch
             {
@@ -89,6 +85,14 @@ namespace Application.Features.Products.Commands.UpdateProduct
                     if (File.Exists(fullPath)) File.Delete(fullPath);
                 }
                 throw;
+            }
+
+            if (!product.Images.Any(img => img.IsMain))
+            {
+                var firstImage = product.Images.FirstOrDefault();
+                if (firstImage != null)
+                    firstImage.IsMain = true;
+                await _productRepository.UpdateAsync(product);
             }
 
             return _mapper.Map<ProductDto>(product);
