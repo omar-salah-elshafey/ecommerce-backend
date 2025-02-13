@@ -11,6 +11,7 @@ namespace Domain.Entities
         public string City { get; set; }
         [Required]
         public string Region { get; set; }
-        public string PostalCode { get; set; }
+        public string UserId { get; set; }
+        public User User { get; set; }
     }
 }

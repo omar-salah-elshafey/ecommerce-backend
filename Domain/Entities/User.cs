@@ -20,5 +20,7 @@ namespace Domain.Entities
         public List<RefreshToken>? RefreshTokens { get; set; }
         public Cart Cart { get; set; }
         public Wishlist Wishlist { get; set; }
+        public List<Address> Addresses { get; set; }
+
     }
 }

@@ -26,20 +26,20 @@ namespace Application.Features.Carts.Commands.ChangeCartItem
                 throw new InvalidInputsException($"You can only order up to {product.MaxOrderQuantity} units.");
             var cart = await _cartRepository.GetByUserIdAsync(userId);
 
+            if (cart is null)
+            {
+                cart = new Cart
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = userId,
+                    Items = new List<CartItem>()
+                };
+                await _cartRepository.AddAsync(cart);
+            }
+
             var cartItem = cart.Items.FirstOrDefault(i => i.ProductId == updateDto.productId);
             if(cartItem is null)
             {
-                if (cart is null)
-                {
-                    cart = new Cart
-                    {
-                        Id = Guid.NewGuid(),
-                        UserId = userId,
-                        Items = new List<CartItem>()
-                    };
-                    await _cartRepository.AddAsync(cart);
-                }
-
                 cartItem = new CartItem
                 {
                     Id = Guid.NewGuid(),

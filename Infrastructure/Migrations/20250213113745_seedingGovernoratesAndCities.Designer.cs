@@ -4,6 +4,7 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250213113745_seedingGovernoratesAndCities")]
+    partial class seedingGovernoratesAndCities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,6 +39,10 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PostalCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Region")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -45,6 +52,8 @@ namespace Infrastructure.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PostalCode");
 
                     b.HasIndex("UserId");
 
@@ -764,8 +773,8 @@ namespace Infrastructure.Migrations
                             Id = "7e53a491-a9de-4c75-af44-ff3271a5176c",
                             AccessFailedCount = 0,
                             ChildrenCount = 0,
-                            ConcurrencyStamp = "a50238ab-5025-4bc7-b442-128bdb55efa2",
-                            DateCreated = new DateTime(2025, 2, 13, 13, 47, 48, 452, DateTimeKind.Utc).AddTicks(8581),
+                            ConcurrencyStamp = "22876d13-ce6d-4311-915f-bc4bd3619326",
+                            DateCreated = new DateTime(2025, 2, 13, 11, 37, 43, 669, DateTimeKind.Utc).AddTicks(8857),
                             Email = "super@admin.com",
                             EmailConfirmed = true,
                             FirstName = "Super",
@@ -778,10 +787,10 @@ namespace Infrastructure.Migrations
                             NormalizedEmail = "SUPER@ADMIN.COM",
                             NormalizedUserName = "SUPER_ADMIN",
                             Online = false,
-                            PasswordHash = "AQAAAAIAAYagAAAAEIBLj5j/Z9XZdAUpSlI8wjikbf9/DO0cgdgXgnkw686jKl5iIl4+8XC2Rw7nA4D5eg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAELkjpyy3N5HrKEpC5j341QCtSq+q5Tev6tA1gDHgMWSaVXuLeh+VxM4+MJcFAYqG4Q==",
                             PhoneNumber = "01234567891",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "442c6f43-7c0f-4e82-ac87-49366b4621ea",
+                            SecurityStamp = "2af44bee-7de6-4d7c-8342-d43ec7c173db",
                             TwoFactorEnabled = false,
                             UserName = "super_admin"
                         });

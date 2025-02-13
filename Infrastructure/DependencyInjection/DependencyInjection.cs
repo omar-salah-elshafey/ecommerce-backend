@@ -5,6 +5,8 @@ using Application.Features.Carts.Dtos;
 using Application.Features.Carts.Validators;
 using Application.Features.Categories.Dtos;
 using Application.Features.Categories.Validators;
+using Application.Features.Orders.Dtos;
+using Application.Features.Orders.Validators;
 using Application.Features.PasswordManagement.Dtos;
 using Application.Features.PasswordManagement.Validators;
 using Application.Features.Products.Dtos;
@@ -60,6 +62,7 @@ namespace Infrastructure.DependencyInjection
             services.AddScoped<IValidator<CreateReviewDto>, CreateReviewDtoValidator>();
             services.AddScoped<IValidator<UpdateReviewDto>, UpdateReviewDtoValidator>();
             services.AddScoped<IValidator<CartItemChangeDto>, CartItemChangeDtoValidator>();
+            services.AddScoped<IValidator<CreateOrderDto>, CreateOrderDtoValidator>();
             // Register application services
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<ICookieService, CookieService>();
@@ -69,6 +72,9 @@ namespace Infrastructure.DependencyInjection
             services.AddScoped<IReviewRepository, ReviewRepository>();
             services.AddScoped<IWishlistRepository, WishlistRepository>();
             services.AddScoped<ICartRepository, CartRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<IGovernorateRepository, GovernorateRepository>();
+            services.AddScoped<ICityRepository, CityRepository>();
             services.AddScoped<IFileService, FileService>();
             services.AddScoped<IImageService, ImageService>();
 

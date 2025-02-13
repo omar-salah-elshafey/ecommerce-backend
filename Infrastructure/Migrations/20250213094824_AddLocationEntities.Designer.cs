@@ -4,6 +4,7 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250213094824_AddLocationEntities")]
+    partial class AddLocationEntities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,6 +39,10 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PostalCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Region")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -45,6 +52,8 @@ namespace Infrastructure.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PostalCode");
 
                     b.HasIndex("UserId");
 
@@ -141,266 +150,6 @@ namespace Infrastructure.Migrations
                     b.HasIndex("GovernorateId");
 
                     b.ToTable("Cities");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("11111111-1111-1111-1111-111111111112"),
-                            GovernorateId = new Guid("01111111-1111-1111-1111-111111111111"),
-                            Name = "الإسكندرية"
-                        },
-                        new
-                        {
-                            Id = new Guid("11111111-1111-1111-1111-111111111113"),
-                            GovernorateId = new Guid("01111111-1111-1111-1111-111111111111"),
-                            Name = "برج العرب"
-                        },
-                        new
-                        {
-                            Id = new Guid("21111111-1111-1111-1111-211111111112"),
-                            GovernorateId = new Guid("02111111-1111-1111-1111-111111111111"),
-                            Name = "دمنهور"
-                        },
-                        new
-                        {
-                            Id = new Guid("21111111-1111-1111-1111-211111111113"),
-                            GovernorateId = new Guid("02111111-1111-1111-1111-111111111111"),
-                            Name = "رشيد"
-                        },
-                        new
-                        {
-                            Id = new Guid("21111111-1111-1111-1111-211111111114"),
-                            GovernorateId = new Guid("02111111-1111-1111-1111-111111111111"),
-                            Name = "كفر الدوار"
-                        },
-                        new
-                        {
-                            Id = new Guid("21111111-1111-1111-1111-211111111115"),
-                            GovernorateId = new Guid("02111111-1111-1111-1111-111111111111"),
-                            Name = "إدكو"
-                        },
-                        new
-                        {
-                            Id = new Guid("31111111-1111-1111-1111-311111111112"),
-                            GovernorateId = new Guid("03111111-1111-1111-1111-111111111111"),
-                            Name = "كفر الشيخ"
-                        },
-                        new
-                        {
-                            Id = new Guid("31111111-1111-1111-1111-311111111113"),
-                            GovernorateId = new Guid("03111111-1111-1111-1111-111111111111"),
-                            Name = "دسوق"
-                        },
-                        new
-                        {
-                            Id = new Guid("31111111-1111-1111-1111-311111111114"),
-                            GovernorateId = new Guid("03111111-1111-1111-1111-111111111111"),
-                            Name = "بيلا"
-                        },
-                        new
-                        {
-                            Id = new Guid("31111111-1111-1111-1111-311111111115"),
-                            GovernorateId = new Guid("03111111-1111-1111-1111-111111111111"),
-                            Name = "فوه"
-                        },
-                        new
-                        {
-                            Id = new Guid("41111111-1111-1111-1111-411111111112"),
-                            GovernorateId = new Guid("04111111-1111-1111-1111-111111111111"),
-                            Name = "طنطا"
-                        },
-                        new
-                        {
-                            Id = new Guid("41111111-1111-1111-1111-411111111113"),
-                            GovernorateId = new Guid("04111111-1111-1111-1111-111111111111"),
-                            Name = "المحلة الكبرى"
-                        },
-                        new
-                        {
-                            Id = new Guid("41111111-1111-1111-1111-411111111114"),
-                            GovernorateId = new Guid("04111111-1111-1111-1111-111111111111"),
-                            Name = "كفر الزيات"
-                        },
-                        new
-                        {
-                            Id = new Guid("41111111-1111-1111-1111-411111111115"),
-                            GovernorateId = new Guid("04111111-1111-1111-1111-111111111111"),
-                            Name = "سمنود"
-                        },
-                        new
-                        {
-                            Id = new Guid("41111111-1111-1111-1111-411111111116"),
-                            GovernorateId = new Guid("04111111-1111-1111-1111-111111111111"),
-                            Name = "زفتى"
-                        },
-                        new
-                        {
-                            Id = new Guid("51111111-1111-1111-1111-511111111112"),
-                            GovernorateId = new Guid("05111111-1111-1111-1111-111111111111"),
-                            Name = "شبين الكوم"
-                        },
-                        new
-                        {
-                            Id = new Guid("51111111-1111-1111-1111-511111111113"),
-                            GovernorateId = new Guid("05111111-1111-1111-1111-111111111111"),
-                            Name = "قويسنا"
-                        },
-                        new
-                        {
-                            Id = new Guid("51111111-1111-1111-1111-511111111114"),
-                            GovernorateId = new Guid("05111111-1111-1111-1111-111111111111"),
-                            Name = "منوف"
-                        },
-                        new
-                        {
-                            Id = new Guid("51111111-1111-1111-1111-511111111115"),
-                            GovernorateId = new Guid("05111111-1111-1111-1111-111111111111"),
-                            Name = "تلا"
-                        },
-                        new
-                        {
-                            Id = new Guid("61111111-1111-1111-1111-611111111112"),
-                            GovernorateId = new Guid("06111111-1111-1111-1111-111111111111"),
-                            Name = "المنصورة"
-                        },
-                        new
-                        {
-                            Id = new Guid("61111111-1111-1111-1111-611111111113"),
-                            GovernorateId = new Guid("06111111-1111-1111-1111-111111111111"),
-                            Name = "ميت غمر"
-                        },
-                        new
-                        {
-                            Id = new Guid("61111111-1111-1111-1111-611111111114"),
-                            GovernorateId = new Guid("06111111-1111-1111-1111-111111111111"),
-                            Name = "أجا"
-                        },
-                        new
-                        {
-                            Id = new Guid("61111111-1111-1111-1111-611111111115"),
-                            GovernorateId = new Guid("06111111-1111-1111-1111-111111111111"),
-                            Name = "دكرنس"
-                        },
-                        new
-                        {
-                            Id = new Guid("61111111-1111-1111-1111-611111111116"),
-                            GovernorateId = new Guid("06111111-1111-1111-1111-111111111111"),
-                            Name = "المنزلة"
-                        },
-                        new
-                        {
-                            Id = new Guid("61111111-1111-1111-1111-611111111117"),
-                            GovernorateId = new Guid("06111111-1111-1111-1111-111111111111"),
-                            Name = "الدراكسة"
-                        },
-                        new
-                        {
-                            Id = new Guid("61111111-1111-1111-1111-611111111118"),
-                            GovernorateId = new Guid("06111111-1111-1111-1111-111111111111"),
-                            Name = "نبروه"
-                        },
-                        new
-                        {
-                            Id = new Guid("71111111-1111-1111-1111-711111111112"),
-                            GovernorateId = new Guid("07111111-1111-1111-1111-111111111111"),
-                            Name = "الزقازيق"
-                        },
-                        new
-                        {
-                            Id = new Guid("71111111-1111-1111-1111-711111111113"),
-                            GovernorateId = new Guid("07111111-1111-1111-1111-111111111111"),
-                            Name = "العاشر من رمضان"
-                        },
-                        new
-                        {
-                            Id = new Guid("71111111-1111-1111-1111-711111111114"),
-                            GovernorateId = new Guid("07111111-1111-1111-1111-111111111111"),
-                            Name = "بلبيس"
-                        },
-                        new
-                        {
-                            Id = new Guid("71111111-1111-1111-1111-711111111115"),
-                            GovernorateId = new Guid("07111111-1111-1111-1111-111111111111"),
-                            Name = "منيا القمح"
-                        },
-                        new
-                        {
-                            Id = new Guid("71111111-1111-1111-1111-711111111116"),
-                            GovernorateId = new Guid("07111111-1111-1111-1111-111111111111"),
-                            Name = "أبو كبير"
-                        },
-                        new
-                        {
-                            Id = new Guid("81111111-1111-1111-1111-811111111112"),
-                            GovernorateId = new Guid("08111111-1111-1111-1111-111111111111"),
-                            Name = "دمياط"
-                        },
-                        new
-                        {
-                            Id = new Guid("81111111-1111-1111-1111-811111111113"),
-                            GovernorateId = new Guid("08111111-1111-1111-1111-111111111111"),
-                            Name = "رأس البر"
-                        },
-                        new
-                        {
-                            Id = new Guid("81111111-1111-1111-1111-811111111114"),
-                            GovernorateId = new Guid("08111111-1111-1111-1111-111111111111"),
-                            Name = "كفر سعد"
-                        },
-                        new
-                        {
-                            Id = new Guid("81111111-1111-1111-1111-811111111115"),
-                            GovernorateId = new Guid("08111111-1111-1111-1111-111111111111"),
-                            Name = "فارسكور"
-                        },
-                        new
-                        {
-                            Id = new Guid("91111111-1111-1111-1111-911111111112"),
-                            GovernorateId = new Guid("09111111-1111-1111-1111-111111111111"),
-                            Name = "بنها"
-                        },
-                        new
-                        {
-                            Id = new Guid("91111111-1111-1111-1111-911111111113"),
-                            GovernorateId = new Guid("09111111-1111-1111-1111-111111111111"),
-                            Name = "شبرا الخيمة"
-                        },
-                        new
-                        {
-                            Id = new Guid("91111111-1111-1111-1111-911111111114"),
-                            GovernorateId = new Guid("09111111-1111-1111-1111-111111111111"),
-                            Name = "قليوب"
-                        },
-                        new
-                        {
-                            Id = new Guid("10111111-1111-1111-1111-101111111112"),
-                            GovernorateId = new Guid("10111111-1111-1111-1111-111111111111"),
-                            Name = "القاهرة"
-                        },
-                        new
-                        {
-                            Id = new Guid("10111111-1111-1111-1111-101111111113"),
-                            GovernorateId = new Guid("10111111-1111-1111-1111-111111111111"),
-                            Name = "مدينة نصر"
-                        },
-                        new
-                        {
-                            Id = new Guid("10111111-1111-1111-1111-101111111114"),
-                            GovernorateId = new Guid("10111111-1111-1111-1111-111111111111"),
-                            Name = "مصر الجديدة"
-                        },
-                        new
-                        {
-                            Id = new Guid("10111111-1111-1111-1111-101111111115"),
-                            GovernorateId = new Guid("10111111-1111-1111-1111-111111111111"),
-                            Name = "حلوان"
-                        },
-                        new
-                        {
-                            Id = new Guid("10111111-1111-1111-1111-101111111116"),
-                            GovernorateId = new Guid("10111111-1111-1111-1111-111111111111"),
-                            Name = "الجيزة"
-                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Governorate", b =>
@@ -416,58 +165,6 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Governorates");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("01111111-1111-1111-1111-111111111111"),
-                            Name = "الإسكندرية"
-                        },
-                        new
-                        {
-                            Id = new Guid("02111111-1111-1111-1111-111111111111"),
-                            Name = "البحيرة"
-                        },
-                        new
-                        {
-                            Id = new Guid("03111111-1111-1111-1111-111111111111"),
-                            Name = "كفر الشيخ"
-                        },
-                        new
-                        {
-                            Id = new Guid("04111111-1111-1111-1111-111111111111"),
-                            Name = "الغربية"
-                        },
-                        new
-                        {
-                            Id = new Guid("05111111-1111-1111-1111-111111111111"),
-                            Name = "المنوفية"
-                        },
-                        new
-                        {
-                            Id = new Guid("06111111-1111-1111-1111-111111111111"),
-                            Name = "الدقهلية"
-                        },
-                        new
-                        {
-                            Id = new Guid("07111111-1111-1111-1111-111111111111"),
-                            Name = "الشرقية"
-                        },
-                        new
-                        {
-                            Id = new Guid("08111111-1111-1111-1111-111111111111"),
-                            Name = "دمياط"
-                        },
-                        new
-                        {
-                            Id = new Guid("09111111-1111-1111-1111-111111111111"),
-                            Name = "القليوبية"
-                        },
-                        new
-                        {
-                            Id = new Guid("10111111-1111-1111-1111-111111111111"),
-                            Name = "القاهرة"
-                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Order", b =>
@@ -764,8 +461,8 @@ namespace Infrastructure.Migrations
                             Id = "7e53a491-a9de-4c75-af44-ff3271a5176c",
                             AccessFailedCount = 0,
                             ChildrenCount = 0,
-                            ConcurrencyStamp = "a50238ab-5025-4bc7-b442-128bdb55efa2",
-                            DateCreated = new DateTime(2025, 2, 13, 13, 47, 48, 452, DateTimeKind.Utc).AddTicks(8581),
+                            ConcurrencyStamp = "eb3d5328-effe-481a-b8da-ae45702f3ac7",
+                            DateCreated = new DateTime(2025, 2, 13, 9, 48, 22, 968, DateTimeKind.Utc).AddTicks(603),
                             Email = "super@admin.com",
                             EmailConfirmed = true,
                             FirstName = "Super",
@@ -778,10 +475,10 @@ namespace Infrastructure.Migrations
                             NormalizedEmail = "SUPER@ADMIN.COM",
                             NormalizedUserName = "SUPER_ADMIN",
                             Online = false,
-                            PasswordHash = "AQAAAAIAAYagAAAAEIBLj5j/Z9XZdAUpSlI8wjikbf9/DO0cgdgXgnkw686jKl5iIl4+8XC2Rw7nA4D5eg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJu/JsN71bhLN7pxzTVEjm8SqmqLJ+rKgWX2dFHwnBbdfvU4yjtxYdIAAuM9BjOL5g==",
                             PhoneNumber = "01234567891",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "442c6f43-7c0f-4e82-ac87-49366b4621ea",
+                            SecurityStamp = "8bdf1aec-27e9-4016-affe-d714bbc5421f",
                             TwoFactorEnabled = false,
                             UserName = "super_admin"
                         });
