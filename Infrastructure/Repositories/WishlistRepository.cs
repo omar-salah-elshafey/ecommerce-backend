@@ -11,6 +11,7 @@ namespace Infrastructure.Repositories
         {
             return await _context.Wishlists
                 .Include(w => w.WishlistItems)
+                .ThenInclude(wi => wi.Product)
                 .FirstOrDefaultAsync(w => w.UserId == userId);
         }
 

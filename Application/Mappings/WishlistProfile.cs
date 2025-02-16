@@ -10,7 +10,8 @@ namespace Application.Mappings
         {
             CreateMap<Wishlist, WishlistDto>()
                 .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.WishlistItems));
-            CreateMap<WishlistItem, WishlistItemDto>();
+            CreateMap<WishlistItem, WishlistItemDto>()
+                .ForMember(dest => dest.ProductPrice, opt => opt.MapFrom(src => src.Product.Price));
         }
     }
 }

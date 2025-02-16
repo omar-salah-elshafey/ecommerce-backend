@@ -21,5 +21,6 @@ namespace Domain.Entities
         public List<ProductImage> Images { get; set; } = new List<ProductImage>();
         public bool IsFeatured { get; set; }
         public int SalesCount { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }

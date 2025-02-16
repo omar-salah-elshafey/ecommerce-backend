@@ -20,7 +20,7 @@ namespace Infrastructure.Repositories
         {
             var totalItems = await GetCountAsync();
             var products = await _context.Products
-                .OrderByDescending(p => p.Name)
+                .OrderByDescending(p => p.CreatedAt)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .Include(p => p.Images)
@@ -34,13 +34,43 @@ namespace Infrastructure.Repositories
                 Items = products
             };
         }
+        public async Task<PaginatedResponseModel<Product>> GetFeaturedProductsAsync(int pageNumber, int pageSize)
+        {
+            var totalItems = await _context.Products.CountAsync(p => p.IsFeatured);
+            var products = await _context.Products
+                .Where(p => p.IsFeatured)
+                .OrderByDescending(p => p.CreatedAt)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Include(p => p.Images)
+                .Include(p => p.Category)
+                .ToListAsync();
+            return new PaginatedResponseModel<Product>
+            {
+                TotalItems = totalItems,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                Items = products
+            };
+        }
+        public async Task<List<Product>> GetBestSellerProductsAsync()
+        {
+            var products = await _context.Products
+                .Where(p => p.SalesCount > 0)
+                .OrderByDescending(p => p.SalesCount)
+                .Take(20)
+                .Include(p => p.Images)
+                .Include(p => p.Category)
+                .ToListAsync();
+            return products;
+        }
 
         public async Task<PaginatedResponseModel<Product>> GetByCategoryIdAsync(Guid categoryId, int pageNumber, int pageSize)
         {
             var totalItems = await _context.Products.CountAsync(p => p.CategoryId == categoryId);
             var products = await _context.Products
                 .Where(p => p.CategoryId == categoryId)
-                .OrderByDescending(p => p.Name)
+                .OrderByDescending(p => p.CreatedAt)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .Include(p => p.Images)
@@ -60,7 +90,7 @@ namespace Infrastructure.Repositories
             var totalItems = await _context.Products.CountAsync(p => p.Name.ToLower().Contains(query.ToLower()));
             var products = await _context.Products
                 .Where(p => p.Name.ToLower().Contains(query.ToLower()))
-                .OrderByDescending(p => p.Name)
+                .OrderByDescending(p => p.CreatedAt)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .Include(p => p.Images)

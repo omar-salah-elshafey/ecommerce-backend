@@ -23,6 +23,7 @@ namespace Infrastructure.Repositories
         {
             return await _context.Carts
                 .Include(c => c.Items)
+                .ThenInclude(i => i.Product)
                 .FirstOrDefaultAsync(c => c.UserId == userId);
         }
 

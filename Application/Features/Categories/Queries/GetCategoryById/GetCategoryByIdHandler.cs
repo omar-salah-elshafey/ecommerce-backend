@@ -6,17 +6,8 @@ using MediatR;
 
 namespace Application.Features.Categories.Queries.GetCategoryById
 {
-    public class GetCategoryByIdHandler : IRequestHandler<GetCategoryByIdQuery, CategoryDto>
+    public class GetCategoryByIdHandler(IMapper _mapper, ICategoryRepository _repository) : IRequestHandler<GetCategoryByIdQuery, CategoryDto>
     {
-        private readonly IMapper _mapper;
-        private readonly ICategoryRepository _repository;
-
-        public GetCategoryByIdHandler(IMapper mapper, ICategoryRepository repository)
-        {
-            _mapper = mapper;
-            _repository = repository;
-        }
-
         public async Task<CategoryDto> Handle(GetCategoryByIdQuery request, CancellationToken cancellationToken)
         {
             var category = await _repository.GetByIdAsync(request.Id);

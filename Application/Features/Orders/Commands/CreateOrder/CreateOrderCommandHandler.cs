@@ -52,7 +52,7 @@ namespace Application.Features.Orders.Commands.CreateOrder
                 if (cartItem.Quantity > product.Stock)
                     throw new InvalidInputsException($"{product.Name} has only {product.Stock} available.");
 
-                totalAmount += cartItem.Quantity * cartItem.SnapShotPrice;
+                totalAmount += cartItem.Quantity * cartItem.Product.Price;
 
                 product.Stock -= cartItem.Quantity;
                 product.SalesCount += cartItem.Quantity;
@@ -82,7 +82,6 @@ namespace Application.Features.Orders.Commands.CreateOrder
                     Id = Guid.NewGuid(),
                     ProductId = ci.ProductId,
                     Quantity = ci.Quantity,
-                    SnapShotPrice = ci.SnapShotPrice,
                 }).ToList()
             };
             await _orderRepository.AddAsync(order);

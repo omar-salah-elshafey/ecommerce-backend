@@ -14,6 +14,12 @@ namespace Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public async Task UpdateOrderStatusAsync(Order order)
+        {
+            _context.Orders.Update(order);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<Order?> GetByIdAsync(Guid orderId)
         {
             return await _context.Orders

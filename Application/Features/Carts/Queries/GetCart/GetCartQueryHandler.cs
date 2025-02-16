@@ -3,6 +3,7 @@ using Application.Features.Carts.Dtos;
 using Application.Features.TokenManagement.GetUserIdFromToken;
 using Application.Interfaces.IRepositories;
 using AutoMapper;
+using Domain.Entities;
 using MediatR;
 
 namespace Application.Features.Carts.Queries.GetCart
@@ -14,8 +15,16 @@ namespace Application.Features.Carts.Queries.GetCart
         {
             var userId = await _mediator.Send(new GetUserIdFromTokenQuery());
             var cart = await _cartRepository.GetByUserIdAsync(userId);
-            if (cart == null)
-                throw new NotFoundException("Cart not found for user");
+            if (cart is null)
+            {
+                cart = new Cart
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = userId,
+                    Items = new List<CartItem>()
+                };
+                await _cartRepository.AddAsync(cart);
+            }
 
             return _mapper.Map<CartDto>(cart);
         }

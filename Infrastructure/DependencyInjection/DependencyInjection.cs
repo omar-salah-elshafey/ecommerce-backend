@@ -63,6 +63,7 @@ namespace Infrastructure.DependencyInjection
             services.AddScoped<IValidator<UpdateReviewDto>, UpdateReviewDtoValidator>();
             services.AddScoped<IValidator<CartItemChangeDto>, CartItemChangeDtoValidator>();
             services.AddScoped<IValidator<CreateOrderDto>, CreateOrderDtoValidator>();
+            services.AddScoped<IValidator<UpdateOrderStatusDto>, UpdateOrderStatusDtoValidator>();
             // Register application services
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<ICookieService, CookieService>();

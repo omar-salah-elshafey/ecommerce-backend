@@ -40,7 +40,6 @@ namespace Application.Features.Wishlists.Commands.AddWishlistItem
                 Id = Guid.NewGuid(),
                 WishlistId = wishlist.Id,
                 ProductId = product.Id,
-                SnapShotPrice = product.Price,
                 AddedAt = DateTime.UtcNow,
             };
             wishlist.WishlistItems.Add(wishlistItem);

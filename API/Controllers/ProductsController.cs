@@ -3,6 +3,8 @@ using Application.Features.Products.Commands.DeleteProduct;
 using Application.Features.Products.Commands.UpdateProduct;
 using Application.Features.Products.Dtos;
 using Application.Features.Products.Queries.GetAllProducts;
+using Application.Features.Products.Queries.GetBestSellerProducts;
+using Application.Features.Products.Queries.GetFeaturedProducts;
 using Application.Features.Products.Queries.GetProductByCategory;
 using Application.Features.Products.Queries.GetProductById;
 using Application.Features.Products.Queries.SearchProductsByName;
@@ -31,6 +33,20 @@ namespace API.Controllers
             return Ok(products);
         }
 
+        [HttpGet("featured")]
+        public async Task<IActionResult> GetFeaturedProductsAsync(int PageNumber = 1, int PageSize = 10)
+        {
+            var products = await _mediator.Send(new GetFeaturedProductsQuery(PageNumber, PageSize));
+            return Ok(products);
+        }
+
+        [HttpGet("best-sellers")]
+        public async Task<IActionResult> GetBestSellerAsync()
+        {
+            var products = await _mediator.Send(new GetBestSellerProductsQuery());
+            return Ok(products);
+        }
+
         [HttpGet("get-product-by-id/{id}")]
         public async Task<IActionResult> GetProductsByIdsync(Guid id)
         {
@@ -38,14 +54,14 @@ namespace API.Controllers
             return Ok(product);
         }
 
-        [HttpGet("get-product-by-categoryId/{categoryId}")]
+        [HttpGet("products/categoryId/{categoryId}")]
         public async Task<IActionResult> GetProductsByCategoryIdsync(Guid categoryId, int PageNumber = 1, int PageSize = 10)
         {
             var products = await _mediator.Send(new GetProductByCategoryQuery(categoryId, PageNumber, PageSize));
             return Ok(products);
         }
 
-        [HttpGet("get-product-by-name/{query}")]
+        [HttpGet("name/{query}")]
         public async Task<IActionResult> GetProductsByNamesync(string query, int PageNumber = 1, int PageSize = 10)
         {
             var products = await _mediator.Send(new SearchProductsByNameQuery(query, PageNumber, PageSize));

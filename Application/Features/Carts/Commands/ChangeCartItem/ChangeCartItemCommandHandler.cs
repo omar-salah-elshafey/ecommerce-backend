@@ -45,7 +45,6 @@ namespace Application.Features.Carts.Commands.ChangeCartItem
                     Id = Guid.NewGuid(),
                     ProductId = updateDto.productId,
                     CartId = cart.Id,
-                    SnapShotPrice = product.Price,
                     Quantity = updateDto.quantity,
                 };
                 cart.Items.Add(cartItem);
