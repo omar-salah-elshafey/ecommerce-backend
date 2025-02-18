@@ -12,6 +12,7 @@
         public bool IsFeatured { get; set; }
         public int SalesCount { get; set; }
         public Guid CategoryId { get; set; }
+        public string CategoryName { get; set; }
         public List<ProductImageDto> Images { get; set; } = new List<ProductImageDto>();
     }
 

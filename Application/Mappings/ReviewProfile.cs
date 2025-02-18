@@ -8,7 +8,7 @@ namespace Application.Mappings
     {
         public ReviewProfile()
         {
-            CreateMap<Review, ReviewDto>();
+            CreateMap<Review, ReviewDto>().ForCtorParam("UserName", opt => opt.MapFrom(src => src.User.UserName));
         }
     }
 }
