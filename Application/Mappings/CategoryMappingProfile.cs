@@ -8,7 +8,9 @@ namespace Application.Mappings
     {
         public CategoryMappingProfile()
         {
-            CreateMap<Category, CategoryDto>();
+            CreateMap<Category, CategoryDto>()
+                .ForMember(dest => dest.ParentCategoryName, opt => opt.MapFrom(src => src.ParentCategory.Name))
+                .ForMember(dest => dest.SubCategories, opt => opt.MapFrom(src => src.SubCategories));
             CreateMap<CreateCategoryDto, Category>();
         }
     }

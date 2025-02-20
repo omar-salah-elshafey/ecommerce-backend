@@ -3,7 +3,6 @@ using Application.Models;
 using Domain.Entities;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using System.Drawing.Printing;
 
 namespace Infrastructure.Repositories
 {
@@ -11,24 +10,21 @@ namespace Infrastructure.Repositories
     {
         public async Task<Category?> GetByIdAsync(Guid id)
         {
-            return await _context.Categories.FindAsync(id);
+            return await _context.Categories
+                .Include(c => c.SubCategories)
+                .ThenInclude(sc => sc.SubCategories)
+                .FirstOrDefaultAsync(c => c.Id == id);
         }
 
-        public async Task<PaginatedResponseModel<Category>> GetAllAsync(int pageNumber, int pageSize)
+        public async Task<List<Category>> GetAllAsync()
         {
             var totalItems = await _context.Categories.CountAsync();
-            var categoties = await _context.Categories
-                .OrderByDescending(c => c.Name)
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
+            return await _context.Categories
+                .Include(c => c.SubCategories)
+                .ThenInclude(sc => sc.SubCategories)
+                .Where(c => c.ParentCategoryId == null)
+                .OrderBy(c => c.Name)
                 .ToListAsync();
-            return new PaginatedResponseModel<Category>
-            {
-                TotalItems = totalItems,
-                PageNumber = pageNumber,
-                PageSize = pageSize,
-                Items = categoties
-            };
         }
 
         public async Task<bool> HasSubCategoriesAsync(Guid parentCategoryId)
@@ -37,6 +33,13 @@ namespace Infrastructure.Repositories
                 .AnyAsync(c => c.ParentCategoryId == parentCategoryId);
         }
 
+        public async Task<List<Category>> GetSubCategotires(Guid parentCategoryId)
+        {
+            return await _context.Categories
+                .Include(c => c.SubCategories)
+                .ThenInclude(sc => sc.SubCategories)
+                .Where(c => c.ParentCategoryId == parentCategoryId).OrderBy(c => c.Name).ToListAsync();
+        }
 
         public async Task AddAsync(Category category)
         {

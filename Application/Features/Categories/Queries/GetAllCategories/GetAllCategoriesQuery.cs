@@ -4,5 +4,5 @@ using MediatR;
 
 namespace Application.Features.Categories.Queries.GetAllCategories
 {
-    public record GetAllCategoriesQuery(int PageNumber, int PageSize) : IRequest<PaginatedResponseModel<CategoryDto>>;
+    public record GetAllCategoriesQuery() : IRequest<List<CategoryDto>>;
 }

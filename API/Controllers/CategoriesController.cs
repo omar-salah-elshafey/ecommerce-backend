@@ -4,6 +4,7 @@ using Application.Features.Categories.Commands.UpdateCategory;
 using Application.Features.Categories.Dtos;
 using Application.Features.Categories.Queries.GetAllCategories;
 using Application.Features.Categories.Queries.GetCategoryById;
+using Application.Features.Categories.Queries.GetSubCategories;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,9 +16,16 @@ namespace API.Controllers
     public class CategoriesController(IMediator _mediator) : ControllerBase
     {
         [HttpGet("get-all-categories")]
-        public async Task<IActionResult> GetAll(int pageNumber = 1, int pageSize = 10)
+        public async Task<IActionResult> GetAll()
         {
-            var categories = await _mediator.Send(new GetAllCategoriesQuery(pageNumber, pageSize));
+            var categories = await _mediator.Send(new GetAllCategoriesQuery());
+            return Ok(categories);
+        }
+
+        [HttpGet("get-sub-categories/{parentCategoryId}")]
+        public async Task<IActionResult> GetSubCategories(Guid parentCategoryId)
+        {
+            var categories = await _mediator.Send(new GetSubCategoriesQuery(parentCategoryId));
             return Ok(categories);
         }
 

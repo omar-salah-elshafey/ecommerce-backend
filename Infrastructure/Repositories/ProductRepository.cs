@@ -65,11 +65,13 @@ namespace Infrastructure.Repositories
             return products;
         }
 
-        public async Task<PaginatedResponseModel<Product>> GetByCategoryIdAsync(Guid categoryId, int pageNumber, int pageSize)
+        public async Task<PaginatedResponseModel<Product>> GetByCategoryIdAsync(List<Guid> categoryIds, int pageNumber, int pageSize)
         {
-            var totalItems = await _context.Products.CountAsync(p => p.CategoryId == categoryId);
-            var products = await _context.Products
-                .Where(p => p.CategoryId == categoryId)
+            var query = _context.Products.AsQueryable();
+            query = query.Where(p => categoryIds.Contains(p.CategoryId));
+            var totalItems = await query.CountAsync();
+
+            var products = await query
                 .OrderByDescending(p => p.CreatedAt)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)

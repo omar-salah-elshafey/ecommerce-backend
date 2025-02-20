@@ -54,10 +54,10 @@ namespace API.Controllers
             return Ok(product);
         }
 
-        [HttpGet("products/categoryId/{categoryId}")]
-        public async Task<IActionResult> GetProductsByCategoryIdsync(Guid categoryId, int PageNumber = 1, int PageSize = 10)
+        [HttpGet("categoryIds")]
+        public async Task<IActionResult> GetProductsByCategoryIdsync([FromQuery] List<Guid> categoryIds, int PageNumber = 1, int PageSize = 10)
         {
-            var products = await _mediator.Send(new GetProductByCategoryQuery(categoryId, PageNumber, PageSize));
+            var products = await _mediator.Send(new GetProductByCategoryQuery(categoryIds, PageNumber, PageSize));
             return Ok(products);
         }
 

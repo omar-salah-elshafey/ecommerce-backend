@@ -4,5 +4,5 @@ using MediatR;
 
 namespace Application.Features.Products.Queries.GetProductByCategory
 {
-    public record GetProductByCategoryQuery(Guid CategoryId, int PageNumber, int PageSize): IRequest<PaginatedResponseModel<ProductDto>>;
+    public record GetProductByCategoryQuery(List<Guid> CategoryIds, int PageNumber, int PageSize): IRequest<PaginatedResponseModel<ProductDto>>;
 }

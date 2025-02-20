@@ -48,7 +48,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Addresses");
+                    b.ToTable("Addresses", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Cart", b =>
@@ -66,7 +66,7 @@ namespace Infrastructure.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Carts");
+                    b.ToTable("Carts", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.CartItem", b =>
@@ -90,7 +90,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("CartItems");
+                    b.ToTable("CartItems", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Category", b =>
@@ -117,7 +117,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("ParentCategoryId");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.City", b =>
@@ -137,7 +137,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("GovernorateId");
 
-                    b.ToTable("Cities");
+                    b.ToTable("Cities", (string)null);
 
                     b.HasData(
                         new
@@ -412,7 +412,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Governorates");
+                    b.ToTable("Governorates", (string)null);
 
                     b.HasData(
                         new
@@ -503,7 +503,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.OrderItem", b =>
@@ -530,7 +530,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderItems");
+                    b.ToTable("OrderItems", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Product", b =>
@@ -588,7 +588,7 @@ namespace Infrastructure.Migrations
                     b.HasIndex("SKU")
                         .IsUnique();
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.ProductImage", b =>
@@ -611,7 +611,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductImages");
+                    b.ToTable("ProductImages", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.Review", b =>
@@ -646,7 +646,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Reviews");
+                    b.ToTable("Reviews", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.User", b =>
@@ -802,7 +802,7 @@ namespace Infrastructure.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Wishlists");
+                    b.ToTable("Wishlists", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Entities.WishlistItem", b =>
@@ -826,7 +826,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("WishlistId");
 
-                    b.ToTable("WishlistItems");
+                    b.ToTable("WishlistItems", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -1126,7 +1126,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.User", b =>
                 {
-                    b.OwnsMany("Domain.Entities.RefreshToken", "RefreshTokens", b1 =>
+                    b.OwnsMany("Domain.Entities.User.RefreshTokens#Domain.Entities.RefreshToken", "RefreshTokens", b1 =>
                         {
                             b1.Property<string>("UserId")
                                 .HasColumnType("nvarchar(450)");
@@ -1152,7 +1152,7 @@ namespace Infrastructure.Migrations
 
                             b1.HasKey("UserId", "Id");
 
-                            b1.ToTable("RefreshToken");
+                            b1.ToTable("RefreshToken", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("UserId");

@@ -12,10 +12,10 @@ namespace Application.Features.Products.Queries.GetProductByCategory
     {
         public async Task<PaginatedResponseModel<ProductDto>> Handle(GetProductByCategoryQuery request, CancellationToken cancellationToken)
         {
-            var category = await _categoryRepository.GetByIdAsync(request.CategoryId);
-            if (category is null)
-                throw new NotFoundException("Category Not Found!");
-            var paginatedProducts = await _productRepository.GetByCategoryIdAsync(request.CategoryId, request.PageNumber, request.PageSize);
+            //var category = await _categoryRepository.GetByIdAsync(request.CategoryId);
+            //if (category is null)
+            //    throw new NotFoundException("Category Not Found!");
+            var paginatedProducts = await _productRepository.GetByCategoryIdAsync(request.CategoryIds, request.PageNumber, request.PageSize);
             return new PaginatedResponseModel<ProductDto>
             {
                 TotalItems = paginatedProducts.TotalItems,

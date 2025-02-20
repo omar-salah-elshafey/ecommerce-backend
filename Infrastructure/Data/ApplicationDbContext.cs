@@ -66,7 +66,7 @@ namespace Infrastructure.Data
                 entity.HasIndex(c => c.IsDeleted);
                 entity.HasQueryFilter(c => !c.IsDeleted);
                 entity.HasMany(c => c.SubCategories)
-                  .WithOne()
+                  .WithOne(c => c.ParentCategory)
                   .HasForeignKey(c => c.ParentCategoryId)
                   .OnDelete(DeleteBehavior.Restrict);
             });

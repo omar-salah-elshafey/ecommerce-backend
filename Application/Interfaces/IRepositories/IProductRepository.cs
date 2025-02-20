@@ -9,7 +9,7 @@ namespace Application.Interfaces.IRepositories
         Task<PaginatedResponseModel<Product>> GetAllAsync(int pageNumber, int pageSize);
         Task<PaginatedResponseModel<Product>> GetFeaturedProductsAsync(int pageNumber, int pageSize);
         Task<List<Product>> GetBestSellerProductsAsync();
-        Task<PaginatedResponseModel<Product>> GetByCategoryIdAsync(Guid categoryId, int pageNumber, int pageSize);
+        Task<PaginatedResponseModel<Product>> GetByCategoryIdAsync(List<Guid> categoryIds, int pageNumber, int pageSize);
         Task<PaginatedResponseModel<Product>> GetByNameAsync(string query, int pageNumber, int pageSize);
         Task<int> GetCountAsync();
         Task AddAsync(Product product);
