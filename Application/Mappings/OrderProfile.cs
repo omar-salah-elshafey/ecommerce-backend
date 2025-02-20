@@ -10,8 +10,13 @@ namespace Application.Mappings
         {
             CreateMap<Order, OrderDto>()
                 .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.Items))
-                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.UserName));
-            CreateMap<OrderItem, OrderItemDto>();
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.UserName))
+                .ForMember(dest => dest.Governorate, opt => opt.MapFrom(src => src.Address.Governorate))
+                .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.Address.City))
+                .ForMember(dest => dest.Region, opt => opt.MapFrom(src => src.Address.Region));
+            CreateMap<OrderItem, OrderItemDto>()
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Product.Name))
+                .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.Product.Images.FirstOrDefault(i => i.IsMain)!.ImageUrl));
 
             CreateMap<Governorate, GovernorateDto>();
 

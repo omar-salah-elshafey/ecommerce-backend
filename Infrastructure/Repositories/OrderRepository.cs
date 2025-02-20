@@ -24,16 +24,23 @@ namespace Infrastructure.Repositories
         {
             return await _context.Orders
                 .Include(o => o.Items)
+                .ThenInclude(i => i.Product)
+                .ThenInclude(p => p.Images)
                 .Include(o => o.User)
+                .Include(o => o.Address)
                 .FirstOrDefaultAsync(o => o.Id == orderId);
         }
 
         public async Task<List<Order>> GetOrdersByUserNameAsync(string userName)
         {
             return await _context.Orders
-                .Include(o => o.Items)
-                .Include(o => o.User)
                 .Where(o => o.User.UserName == userName)
+                .Include(o => o.Items)
+                .ThenInclude(i => i.Product)
+                .ThenInclude(p => p.Images)
+                .Include(o => o.User)
+                .Include(o => o.Address)
+                .OrderByDescending(o => o.OrderDate)
                 .ToListAsync();
         }
 
@@ -43,6 +50,10 @@ namespace Infrastructure.Repositories
                 .Where(o => o.User.UserName == userName && o.Status != OrderStatus.Delivered && o.Status != OrderStatus.Cancelled)
                 .Include(o => o.User)
                 .Include(o => o.Items)
+                .ThenInclude(i => i.Product)
+                .ThenInclude(p => p.Images)
+                .Include(o => o.Address)
+                .OrderByDescending(o => o.OrderDate)
                 .ToListAsync();
         }
 
@@ -51,6 +62,10 @@ namespace Infrastructure.Repositories
             return await _context.Orders
                 .Include(o => o.User)
                 .Include(o => o.Items)
+                .ThenInclude(i => i.Product)
+                .ThenInclude(p => p.Images)
+                .Include(o => o.Address)
+                .OrderByDescending(o => o.OrderDate)
                 .ToListAsync();
         }
 
@@ -60,6 +75,10 @@ namespace Infrastructure.Repositories
                 .Where(o => o.Status != OrderStatus.Delivered && o.Status != OrderStatus.Cancelled)
                 .Include(o => o.User)
                 .Include(o => o.Items)
+                .ThenInclude(i => i.Product)
+                .ThenInclude(p => p.Images)
+                .Include(o => o.Address)
+                .OrderByDescending(o => o.OrderDate)
                 .ToListAsync();
         }
     }

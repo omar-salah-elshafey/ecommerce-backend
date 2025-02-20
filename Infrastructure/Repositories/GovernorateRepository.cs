@@ -17,7 +17,6 @@ namespace Infrastructure.Repositories
         public async Task<List<Governorate>> GetAllAsync()
         {
             return await _context.Governorates
-                .Include(g => g.Cities)
                 .ToListAsync();
         }
     }

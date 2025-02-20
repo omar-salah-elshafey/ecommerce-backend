@@ -8,8 +8,8 @@ using MediatR;
 
 namespace Application.Features.Orders.Commands.CancelOrder
 {
-    public class CancelOrderCommandHandler(IOrderRepository _orderRepository, IMapper _mapper, IMediator _mediator) :
-        IRequestHandler<CancelOrderCommand, OrderDto>
+    public class CancelOrderCommandHandler(IOrderRepository _orderRepository, IProductRepository _productRepository, IMapper _mapper, IMediator _mediator) 
+        : IRequestHandler<CancelOrderCommand, OrderDto>
     {
         public async Task<OrderDto> Handle(CancelOrderCommand request, CancellationToken cancellationToken)
         {
@@ -22,6 +22,16 @@ namespace Application.Features.Orders.Commands.CancelOrder
             if (order.Status == OrderStatus.Delivered || order.Status == OrderStatus.Cancelled)
                 throw new InvalidInputsException("Cannot update status of a delivered or cancelled order.");
             order.Status = OrderStatus.Cancelled;
+            foreach (var orderItem in order.Items)
+            {
+                var product = await _productRepository.GetByIdAsync(orderItem.ProductId);
+                if (product != null)
+                {
+                    product.Stock += orderItem.Quantity;
+                    product.SalesCount -= orderItem.Quantity;
+                    await _productRepository.UpdateAsync(product);
+                }
+            }
             await _orderRepository.UpdateOrderStatusAsync(order);
             return _mapper.Map<OrderDto>(order);
         }

@@ -82,6 +82,7 @@ namespace Application.Features.Orders.Commands.CreateOrder
                     Id = Guid.NewGuid(),
                     ProductId = ci.ProductId,
                     Quantity = ci.Quantity,
+                    SnapShotPrice = ci.Product.Price
                 }).ToList()
             };
             await _orderRepository.AddAsync(order);

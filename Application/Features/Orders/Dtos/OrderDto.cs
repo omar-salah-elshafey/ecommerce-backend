@@ -1,6 +1,4 @@
-﻿using Domain.Enums;
-
-namespace Application.Features.Orders.Dtos
+﻿namespace Application.Features.Orders.Dtos
 {
     public class OrderDto
     {
@@ -9,6 +7,9 @@ namespace Application.Features.Orders.Dtos
         public decimal TotalAmount { get; set; }
         public string Status { get; set; }
         public Guid AddressId { get; set; }
+        public string Governorate { get; set; }
+        public string City { get; set; }
+        public string Region { get; set; }
         public List<OrderItemDto> Items { get; set; }
         public string UserName { get; set; }
     }
