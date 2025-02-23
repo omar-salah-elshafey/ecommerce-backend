@@ -21,6 +21,8 @@ namespace Application.Mappings
             CreateMap<Governorate, GovernorateDto>();
 
             CreateMap<City, CityDto>();
+
+            CreateMap<Address, AddressDto>();
         }
     }
 }

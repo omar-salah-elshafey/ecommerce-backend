@@ -20,6 +20,17 @@ namespace Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public async Task<List<Address>> GetUserAddressesAsync(string userId)
+        {
+            return await _context.Addresses.Where(a => a.UserId == userId)
+                .ToListAsync();
+        }
+
+        public async Task<Address?> GetAddressByIdAsync(Guid addressId)
+        {
+            return await _context.Addresses.FirstOrDefaultAsync(a => a.Id == addressId);
+        }
+
         public async Task<Order?> GetByIdAsync(Guid orderId)
         {
             return await _context.Orders

@@ -24,19 +24,38 @@ namespace Application.Features.Orders.Commands.CreateOrder
             if (!validationResult.IsValid)
                 throw new ValidationException(validationResult.Errors);
 
-            var governorate = await _governorateRepository.GetByIdAsync(orderDto.GovernorateId);
-            if (governorate == null)
-                throw new NotFoundException("Invalid Governorate.");
-
-            var city = await _cityRepository.GetByIdAsync(orderDto.CityId);
-            if (city == null)
-                throw new NotFoundException("Invalid City.");
-
-            if (city.GovernorateId != orderDto.GovernorateId)
-                throw new InvalidInputsException("The selected city does not belong to the chosen governorate.");
-
             var userId = await _mediator.Send(new GetUserIdFromTokenQuery());
             var userName = await _mediator.Send(new GetUsernameFromTokenQuery());
+            Address orderAddress;
+
+            if (orderDto.AddressId.HasValue)
+            {
+                orderAddress = await _orderRepository.GetAddressByIdAsync(orderDto.AddressId.Value);
+                if (orderAddress == null || orderAddress.UserId != userId)
+                    throw new NotFoundException("Address not found");
+            }
+            else
+            {
+                var governorate = await _governorateRepository.GetByIdAsync(orderDto.GovernorateId.Value);
+                if (governorate == null)
+                    throw new NotFoundException("Invalid Governorate.");
+
+                var city = await _cityRepository.GetByIdAsync(orderDto.CityId.Value);
+                if (city == null)
+                    throw new NotFoundException("Invalid City.");
+
+                if (city.GovernorateId != orderDto.GovernorateId)
+                    throw new InvalidInputsException("The selected city does not belong to the chosen governorate.");
+
+                orderAddress = new Address
+                {
+                    Id = Guid.NewGuid(),
+                    Governorate = governorate.Name,
+                    City = city.Name,
+                    Region = request.CreateOrderDto.Region.Trim(),
+                    UserId = userId
+                };
+            }
 
             var cart = await _cartRepository.GetByUserIdAsync(userId);
             if (cart == null || cart.Items == null || !cart.Items.Any())
@@ -58,15 +77,6 @@ namespace Application.Features.Orders.Commands.CreateOrder
                 product.SalesCount += cartItem.Quantity;
                 await _productRepository.UpdateAsync(product);
             }
-
-            var orderAddress = new Address
-            {
-                Id = Guid.NewGuid(),
-                Governorate = governorate.Name,
-                City = city.Name,
-                Region = request.CreateOrderDto.Region.Trim(),
-                UserId = userId
-            };
 
             var order = new Order
             {

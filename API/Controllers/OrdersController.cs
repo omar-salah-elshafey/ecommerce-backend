@@ -9,6 +9,7 @@ using Application.Features.Orders.Queries.GetGovernorates;
 using Application.Features.Orders.Queries.GetInProgressOrders;
 using Application.Features.Orders.Queries.GetInProgressOrdersByUser;
 using Application.Features.Orders.Queries.GetOrderById;
+using Application.Features.Orders.Queries.GetUserAddresses;
 using Application.Features.TokenManagement.GetUsernameFromToken;
 using Application.Interfaces.IRepositories;
 using MediatR;
@@ -23,6 +24,14 @@ namespace API.Controllers
     [Authorize]
     public class OrdersController(IMediator _mediator) : ControllerBase
     {
+        [HttpGet("user-addresses")]
+        [Authorize]
+        public async Task<IActionResult> GetUserAddresses()
+        {
+            var addresses = await _mediator.Send(new GetUserAddressesQuery());
+            return Ok(addresses);
+        }
+
         [HttpGet("governorates")]
         public async Task<IActionResult> GetGovernoratesAsync()
         {

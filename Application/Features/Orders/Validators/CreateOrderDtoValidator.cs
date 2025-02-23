@@ -7,11 +7,19 @@ namespace Application.Features.Orders.Validators
     {
         public CreateOrderDtoValidator()
         {
-            RuleFor(x => x.GovernorateId).NotEmpty().WithMessage("Governorate Cannot be empty!");
+            When(x => string.IsNullOrEmpty(x.AddressId?.ToString()), () =>
+            {
+                RuleFor(x => x.GovernorateId)
+                    .NotEmpty().WithMessage("Governorate Cannot be empty!")
+                    .NotNull().WithMessage("Governorate Cannot be empty!");
 
-            RuleFor(x => x.CityId).NotEmpty().WithMessage("City Cannot be empty!");
+                RuleFor(x => x.CityId)
+                    .NotEmpty().WithMessage("City Cannot be empty!")
+                    .NotNull().WithMessage("City Cannot be empty!");
 
-            RuleFor(x => x.Region).NotEmpty().WithMessage("Region Cannot be empty!");
+                RuleFor(x => x.Region)
+                    .NotEmpty().WithMessage("Region Cannot be empty!");
+            });
 
             RuleFor(x => x.PhoneNumber).NotEmpty().WithMessage("PhoneNumber Cannot be empty!")
                 .Matches(@"^(?:\+2)?(01(?:0|1|2|5)\d{8})$")

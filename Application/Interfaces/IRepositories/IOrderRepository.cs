@@ -12,5 +12,7 @@ namespace Application.Interfaces.IRepositories
         Task<List<Order>> GetInProgressOrdersByUserNameAsync(string userName);
         Task<List<Order>> GetAllOrdersAsync();
         Task<List<Order>> GetAllInProgressOrdersAsync();
+        Task<Address?> GetAddressByIdAsync(Guid addressId);
+        Task<List<Address>> GetUserAddressesAsync(string userId);
     }
 }
