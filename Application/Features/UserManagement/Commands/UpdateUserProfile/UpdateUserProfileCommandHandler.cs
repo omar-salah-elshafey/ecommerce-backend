@@ -4,6 +4,7 @@ using Application.Features.TokenManagement.GetUserRoleFromToken;
 using Application.Features.UserManagement.Dtos;
 using AutoMapper;
 using Domain.Entities;
+using Domain.Enums;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -31,6 +32,8 @@ namespace Application.Features.UserManagement.Commands.UpdateUserProfile
             _logger.LogInformation($"current UserNAme: {currentUserName}, Admin? {isAdmin}");
             if (!currentUserName.Equals(userName) && !isAdmin)
                 throw new ForbiddenAccessException("لا يمكنك إتمام هذه العملية!");
+            if (user.MaritalStatus != MaritalStatus.Single && updateUserDto.MaritalStatus == MaritalStatus.Single)
+                throw new InvalidInputsException("لا يمكن تغيرر الحالة الاجتماعية إلى أعزب إذا كنت غير أعزب");
             _mapper.Map(updateUserDto, user);
             var result = await _userManager.UpdateAsync(user);
             if (!result.Succeeded)
