@@ -23,6 +23,8 @@ namespace Infrastructure.Data
         public DbSet<WishlistItem> WishlistItems { get; set; }
         public DbSet<Governorate> Governorates { get; set; }
         public DbSet<City> Cities { get; set; }
+        public DbSet<UsersMessage> UsersMessages { get; set; }
+        public DbSet<NewsletterSubscriber> NewsletterSubscribers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -123,6 +125,10 @@ namespace Infrastructure.Data
                 .WithMany(g => g.Cities)
                 .HasForeignKey(c => c.GovernorateId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<NewsletterSubscriber>()
+                .HasIndex(n => n.Email)
+                .IsUnique();
 
             seedRoles(builder);
             addUser(builder);

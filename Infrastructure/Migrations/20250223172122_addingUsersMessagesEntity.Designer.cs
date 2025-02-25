@@ -4,6 +4,7 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250223172122_addingUsersMessagesEntity")]
+    partial class addingUsersMessagesEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -467,34 +470,6 @@ namespace Infrastructure.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Domain.Entities.NewsletterSubscriber", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("SubscribedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("UnsubscribedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Email")
-                        .IsUnique();
-
-                    b.ToTable("NewsletterSubscribers");
-                });
-
             modelBuilder.Entity("Domain.Entities.Order", b =>
                 {
                     b.Property<Guid>("Id")
@@ -792,8 +767,8 @@ namespace Infrastructure.Migrations
                             Id = "7e53a491-a9de-4c75-af44-ff3271a5176c",
                             AccessFailedCount = 0,
                             ChildrenCount = 0,
-                            ConcurrencyStamp = "b6b50858-16fe-409d-9ae8-486c2fbebcea",
-                            DateCreated = new DateTime(2025, 2, 25, 10, 37, 31, 680, DateTimeKind.Utc).AddTicks(3376),
+                            ConcurrencyStamp = "aba1564c-c5e8-47ba-94ca-6fa1638d747a",
+                            DateCreated = new DateTime(2025, 2, 23, 17, 21, 21, 418, DateTimeKind.Utc).AddTicks(5521),
                             Email = "super@admin.com",
                             EmailConfirmed = true,
                             FirstName = "Super",
@@ -806,10 +781,10 @@ namespace Infrastructure.Migrations
                             NormalizedEmail = "SUPER@ADMIN.COM",
                             NormalizedUserName = "SUPER_ADMIN",
                             Online = false,
-                            PasswordHash = "AQAAAAIAAYagAAAAENiBofeamth6xrTx+Xgsvekl2vG85qVIQqH7V7UkvmT7uDSusrEKvbO9KMri2Gse7A==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEMTinrMzaK6ea0eJWcOj3yx5M7nggFcVy/1rGXDoVTyUiDF9K2BURk9EpdLQUOV5Mg==",
                             PhoneNumber = "01234567891",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "db8cc3fa-1f1d-4cfe-b88c-c57e90dc8276",
+                            SecurityStamp = "cd9dbe4a-a085-40ae-afaa-ce524ea739ac",
                             TwoFactorEnabled = false,
                             UserName = "super_admin"
                         });

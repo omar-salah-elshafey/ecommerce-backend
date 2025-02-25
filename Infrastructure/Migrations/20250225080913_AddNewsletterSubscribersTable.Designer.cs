@@ -4,6 +4,7 @@ using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250225080913_AddNewsletterSubscribersTable")]
+    partial class AddNewsletterSubscribersTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -475,10 +478,9 @@ namespace Infrastructure.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsActive")
+                    b.Property<bool>("IsConfirmed")
                         .HasColumnType("bit");
 
                     b.Property<DateTime>("SubscribedAt")
@@ -488,9 +490,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Email")
-                        .IsUnique();
 
                     b.ToTable("NewsletterSubscribers");
                 });
@@ -792,8 +791,8 @@ namespace Infrastructure.Migrations
                             Id = "7e53a491-a9de-4c75-af44-ff3271a5176c",
                             AccessFailedCount = 0,
                             ChildrenCount = 0,
-                            ConcurrencyStamp = "b6b50858-16fe-409d-9ae8-486c2fbebcea",
-                            DateCreated = new DateTime(2025, 2, 25, 10, 37, 31, 680, DateTimeKind.Utc).AddTicks(3376),
+                            ConcurrencyStamp = "b2b854f0-7946-45ae-8334-21968d358a44",
+                            DateCreated = new DateTime(2025, 2, 25, 8, 9, 11, 614, DateTimeKind.Utc).AddTicks(3270),
                             Email = "super@admin.com",
                             EmailConfirmed = true,
                             FirstName = "Super",
@@ -806,10 +805,10 @@ namespace Infrastructure.Migrations
                             NormalizedEmail = "SUPER@ADMIN.COM",
                             NormalizedUserName = "SUPER_ADMIN",
                             Online = false,
-                            PasswordHash = "AQAAAAIAAYagAAAAENiBofeamth6xrTx+Xgsvekl2vG85qVIQqH7V7UkvmT7uDSusrEKvbO9KMri2Gse7A==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEDGglUnn9ldobMMU/6bTOws0CKyzkBjRzmL5j1fcDKxKVOGg8Eq1xRjb8BFlfao/yA==",
                             PhoneNumber = "01234567891",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "db8cc3fa-1f1d-4cfe-b88c-c57e90dc8276",
+                            SecurityStamp = "5d3cf58c-7714-4254-9cef-08545ea1f484",
                             TwoFactorEnabled = false,
                             UserName = "super_admin"
                         });
