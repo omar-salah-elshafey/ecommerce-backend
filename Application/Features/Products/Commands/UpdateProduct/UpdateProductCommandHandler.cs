@@ -63,7 +63,7 @@ namespace Application.Features.Products.Commands.UpdateProduct
 
                     foreach (var file in dto.NewImages)
                     {
-                        string imageUrl = await _fileService.UploadFileAsync(file);
+                        string imageUrl = await _fileService.UploadFileAsync(file, "products", "image");
                         uploadedFiles.Add(imageUrl);
                         var productImage = new ProductImage
                         {

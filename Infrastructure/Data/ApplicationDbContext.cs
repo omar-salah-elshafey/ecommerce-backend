@@ -25,6 +25,7 @@ namespace Infrastructure.Data
         public DbSet<City> Cities { get; set; }
         public DbSet<UsersMessage> UsersMessages { get; set; }
         public DbSet<NewsletterSubscriber> NewsletterSubscribers { get; set; }
+        public DbSet<BlogPost> BlogPosts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -129,6 +130,9 @@ namespace Infrastructure.Data
             builder.Entity<NewsletterSubscriber>()
                 .HasIndex(n => n.Email)
                 .IsUnique();
+
+            builder.Entity<BlogPost>()
+                .HasQueryFilter(p => !p.IsDeleted);
 
             seedRoles(builder);
             addUser(builder);

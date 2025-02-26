@@ -12,8 +12,7 @@ using Microsoft.Extensions.Logging;
 namespace Application.Features.Products.Commands.CreateProduct
 {
     public class CreateProductCommandHandler(IProductRepository _productRepository, IMapper _mapper, IValidator<CreateProductDto> _validator,
-        IFileService _fileService, ICategoryRepository _categoryRepository, IHttpContextAccessor _httpContextAccessor, 
-        ILogger<CreateProductCommandHandler> _logger)
+        IFileService _fileService, ICategoryRepository _categoryRepository, ILogger<CreateProductCommandHandler> _logger)
         : IRequestHandler<CreateProductCommand, ProductDto>
     {
         public async Task<ProductDto> Handle(CreateProductCommand request, CancellationToken cancellationToken)
@@ -45,7 +44,7 @@ namespace Application.Features.Products.Commands.CreateProduct
                 {
                     foreach (var file in dto.Images)
                     {
-                        string imageUrl = await _fileService.UploadFileAsync(file);
+                        string imageUrl = await _fileService.UploadFileAsync(file, "products", "image");
                         uploadedFiles.Add(imageUrl);
                         product.Images.Add(new ProductImage
                         {
