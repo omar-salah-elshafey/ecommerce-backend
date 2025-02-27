@@ -22,8 +22,9 @@ namespace API.Controllers
         public async Task<IActionResult> GetUsersCountAsync()
         {
             var usersCount = await _mediator.Send(new GetUsersCountQuery());
-            return Ok(new { count = usersCount });
+            return Ok(usersCount);
         }
+
         [HttpGet("get-all-users")]
         [Authorize]
         public async Task<IActionResult> GetAllUsersAsync(int pageNumber = 1, int pageSize = 10)

@@ -1,6 +1,7 @@
 ﻿using Application.Features.NewsletterSubscribers.Commands.RemoveSubscriber;
 using Application.Features.NewsletterSubscribers.Commands.Subscirbe;
 using Application.Features.NewsletterSubscribers.Commands.UnSubscribe;
+using Application.Features.NewsletterSubscribers.Queries.GetActiveSubscribersCount;
 using Application.Features.NewsletterSubscribers.Queries.GetAllSubscribers;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -25,6 +26,12 @@ namespace API.Controllers
         {
             var result = await _mediator.Send(new GetAllSubscribersQuery(pageNumber, pageSize));
             return Ok(result);
+        }
+
+        [HttpGet("count")]
+        public async Task<IActionResult> GetCountAsync()
+        {
+            return Ok(await _mediator.Send(new GetActiveSubscribersCountQuery()));
         }
 
         [HttpPut("unsubscribe/{email}")]

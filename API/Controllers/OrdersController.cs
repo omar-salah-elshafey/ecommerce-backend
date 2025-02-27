@@ -8,10 +8,11 @@ using Application.Features.Orders.Queries.GetCitiesByGovernorate;
 using Application.Features.Orders.Queries.GetGovernorates;
 using Application.Features.Orders.Queries.GetInProgressOrders;
 using Application.Features.Orders.Queries.GetInProgressOrdersByUser;
+using Application.Features.Orders.Queries.GetInProgressOrdersCount;
 using Application.Features.Orders.Queries.GetOrderById;
+using Application.Features.Orders.Queries.GetOrdersCount;
 using Application.Features.Orders.Queries.GetUserAddresses;
 using Application.Features.TokenManagement.GetUsernameFromToken;
-using Application.Interfaces.IRepositories;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -65,17 +66,17 @@ namespace API.Controllers
 
         [HttpGet("get-all-in-progress-orders")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> GetInProgressOrdersAsync()
+        public async Task<IActionResult> GetInProgressOrdersAsync(int pageNumber = 1, int pageSize = 10)
         {
-            var orders = await _mediator.Send(new GetInProgressOrdersQuery());
+            var orders = await _mediator.Send(new GetInProgressOrdersQuery(pageNumber, pageSize));
             return Ok(orders);
         }
 
         [HttpGet("get-all-orders-history")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> GetOrderHistoryAsync()
+        public async Task<IActionResult> GetOrderHistoryAsync(int pageNumber = 1, int pageSize = 10)
         {
-            var orders = await _mediator.Send(new GetAllOrdersQuery());
+            var orders = await _mediator.Send(new GetAllOrdersQuery(pageNumber, pageSize));
             return Ok(orders);
         }
 
@@ -109,6 +110,18 @@ namespace API.Controllers
         {
             var orders = await _mediator.Send(new GetAllOrdersByUserQuery(userName));
             return Ok(orders);
+        }
+
+        [HttpGet("count")]
+        public async Task<IActionResult> GetCountAsync()
+        {
+            return Ok(await _mediator.Send(new GetOrdersCountQuery()));
+        }
+
+        [HttpGet("count/in-progress")]
+        public async Task<IActionResult> GetInProgressCountAsync()
+        {
+            return Ok(await _mediator.Send(new GetInProgressOrdersCountQuery()));
         }
 
         [HttpPut("update-order-status")]

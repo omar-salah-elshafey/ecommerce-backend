@@ -7,6 +7,7 @@ using Application.Features.Products.Queries.GetBestSellerProducts;
 using Application.Features.Products.Queries.GetFeaturedProducts;
 using Application.Features.Products.Queries.GetProductByCategory;
 using Application.Features.Products.Queries.GetProductById;
+using Application.Features.Products.Queries.GetProductsCount;
 using Application.Features.Products.Queries.SearchProductsByName;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -66,6 +67,12 @@ namespace API.Controllers
         {
             var products = await _mediator.Send(new SearchProductsByNameQuery(query, PageNumber, PageSize));
             return Ok(products);
+        }
+
+        [HttpGet("count")]
+        public async Task<IActionResult> GetCountAsync()
+        {
+            return Ok(await _mediator.Send(new GetProductsCountQuery()));
         }
 
         [HttpPut("update-product/{id}")]

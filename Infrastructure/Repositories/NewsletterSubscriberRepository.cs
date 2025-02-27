@@ -37,6 +37,11 @@ namespace Infrastructure.Repositories
                          .FirstOrDefaultAsync(s => s.Email == email);
         }
 
+        public async Task<int> GetCountAsync()
+        {
+            return await _context.NewsletterSubscribers.CountAsync(ns => ns.IsActive);
+        }
+
         public async Task UpdateAsync(NewsletterSubscriber subscriber)
         {
             _context.NewsletterSubscribers.Update(subscriber);

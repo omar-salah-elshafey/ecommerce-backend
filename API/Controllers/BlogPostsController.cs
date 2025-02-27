@@ -23,9 +23,9 @@ namespace API.Controllers
         }
 
         [HttpGet("posts")]
-        public async Task<IActionResult> GetAllPostsAsync(int pgaeNumber = 1, int pageSize = 10)
+        public async Task<IActionResult> GetAllPostsAsync(int pageNumber = 1, int pageSize = 10)
         {
-            var result = await _mediator.Send(new GetAllPostsQuery(pgaeNumber, pageSize));
+            var result = await _mediator.Send(new GetAllPostsQuery(pageNumber, pageSize));
             return Ok(result);
         }
 

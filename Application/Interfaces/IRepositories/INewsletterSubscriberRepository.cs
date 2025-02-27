@@ -8,6 +8,7 @@ namespace Application.Interfaces.IRepositories
         Task AddAsync(NewsletterSubscriber subscriber);
         Task<PaginatedResponseModel<NewsletterSubscriber>> GetAllAsync(int pageNumber, int pageSize);
         Task<NewsletterSubscriber?> GetByEmailAsync(string email);
+        Task<int> GetCountAsync();
         Task UpdateAsync(NewsletterSubscriber subscriber);
         Task DeleteAsync(NewsletterSubscriber subscriber);
     }

@@ -3,6 +3,7 @@ using Application.Features.Categories.Commands.DeleteCategory;
 using Application.Features.Categories.Commands.UpdateCategory;
 using Application.Features.Categories.Dtos;
 using Application.Features.Categories.Queries.GetAllCategories;
+using Application.Features.Categories.Queries.GetCategoriesCount;
 using Application.Features.Categories.Queries.GetCategoryById;
 using Application.Features.Categories.Queries.GetSubCategories;
 using MediatR;
@@ -34,6 +35,12 @@ namespace API.Controllers
         {
             var category = await _mediator.Send(new GetCategoryByIdQuery(id));
             return Ok(category);
+        }
+
+        [HttpGet("count")]
+        public async Task<IActionResult> GetCountAsync()
+        {
+            return Ok(await _mediator.Send(new GetCategoriesCountQuery()));
         }
 
         [HttpPost("add-category")]
