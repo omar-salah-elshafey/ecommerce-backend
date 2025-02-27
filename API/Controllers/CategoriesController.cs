@@ -53,7 +53,7 @@ namespace API.Controllers
 
         [HttpPut("update-category/{id}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Update(Guid id,UpdateCategoryDto dto)
+        public async Task<IActionResult> Update(Guid id, UpdateCategoryDto dto)
         {
             var category = await _mediator.Send(new UpdateCategoryCommand(id, dto));
             return Ok(category);
