@@ -64,32 +64,33 @@ The project follows the **Clean Architecture** structure:
 
 ## API Endpoints
 ### Authentication
-- `POST /api/auth/register` – Register a new user
-- `POST /api/auth/login` – Authenticate user and get JWT token
+- `POST /api/Auth/register-user` – Register a new user
+- `POST /api/Auth/login` – Authenticate user and get JWT token
+- `POST /api/Auth/refreshtoken` – Refresh the JWT token
 
 ### Products
-- `GET /api/products?pageNumber={page}&pageSize={size}` – Get paginated product list
-- `GET /api/products/{id}` – Get product by ID
-- `GET /api/products/get-featured-products` – Get featured products
-- `GET /api/products/get-best-seller` – Get top-selling products
-- `POST /api/products` – Add a new product (Admin only)
-- `PUT /api/products/{id}` – Update a product (Admin only)
-- `DELETE /api/products/{id}` – Soft delete a product (Admin only)
+- `GET /api/Products/get-all-products?pageNumber={page}&pageSize={size}` – Get paginated product list
+- `GET /api/Products/get-product-by-id/{id}` – Get product by ID
+- `GET /api/Products/featured` – Get featured products
+- `GET /api/Products/best-sellers` – Get top-selling products
+- `POST /api/Products/add-product` – Add a new product (Admin only)
+- `PUT /api/Products/update-product/{id}` – Update a product (Admin only)
+- `DELETE /api/Products/delete-product/{id}` – Soft delete a product (Admin only)
 
 ### Orders
-- `POST /api/orders` – Place an order
-- `PUT /api/orders/update-status` – Update order status (Admin only)
+- `POST /api/Orders/place-order` – Place an order
+- `PUT /api/Orders/update-order-status` – Update order status (Admin only)
 
 ### Location
-- `GET /api/governorates` – Get all governorates
-- `GET /api/governorates/{id}/cities` – Get cities by governorate
+- `GET /api/Orders/governorates` – Get all governorates
+- `GET /api/Orders/governorates/{governorateId}/cities` – Get cities by governorate
 
 ---
 
 ## Installation & Setup
 ### 1️⃣ Clone the repository
 ```bash
-git clone https://github.com/your-repo-url.git
+git clone https://github.com/omar-salah-elshafey/ecommerce-backend.git
 cd e-commerce-backend
 ```
 ### 2️⃣ Configure Database Connection
