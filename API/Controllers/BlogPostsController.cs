@@ -15,7 +15,7 @@ namespace API.Controllers
     public class BlogPostsController(IMediator _mediator) : ControllerBase
     {
         [HttpPost("create-post")]
-        //[Authorize(Roles ="Admin")]
+        [Authorize(Roles ="Admin")]
         public async Task<IActionResult> CreatePostAsync([FromForm] CreatePostDto createPostDto)
         {
             var result = await _mediator.Send(new CreatePostCommand(createPostDto));
@@ -37,7 +37,7 @@ namespace API.Controllers
         }
 
         [HttpPut("update-post/{id}")]
-        //[Authorize(Roles ="Admin")]
+        [Authorize(Roles ="Admin")]
         public async Task<IActionResult> UpdatePostAsync(Guid id, [FromForm] UpdatePostDto updatePostDto)
         {
             var result = await _mediator.Send(new UpdatePostCommand(id, updatePostDto));

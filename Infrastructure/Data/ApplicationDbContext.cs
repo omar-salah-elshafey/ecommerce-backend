@@ -26,6 +26,7 @@ namespace Infrastructure.Data
         public DbSet<UsersMessage> UsersMessages { get; set; }
         public DbSet<NewsletterSubscriber> NewsletterSubscribers { get; set; }
         public DbSet<BlogPost> BlogPosts { get; set; }
+        public DbSet<Otp> Otps { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -133,6 +134,17 @@ namespace Infrastructure.Data
 
             builder.Entity<BlogPost>()
                 .HasQueryFilter(p => !p.IsDeleted);
+
+            builder.Entity<Otp>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.OtpCode).HasMaxLength(6);
+                entity.Property(e => e.Email).IsRequired();
+                entity.Property(e => e.Token).IsRequired();
+                entity.Property(e => e.ExpirationDateTime).IsRequired();
+
+                entity.HasIndex(e => new { e.Email, e.OtpCode });
+            });
 
             seedRoles(builder);
             addUser(builder);

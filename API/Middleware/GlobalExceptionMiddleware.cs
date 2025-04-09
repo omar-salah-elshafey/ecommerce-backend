@@ -26,7 +26,7 @@ namespace API.Middleware
             }
             catch (DuplicateValueException ex)
             {
-                _logger.LogWarning($"Duplicate email error: {ex.Message}");
+                _logger.LogWarning($"Duplicate value error: {ex.Message}");
                 context.Response.StatusCode = StatusCodes.Status409Conflict;
                 await context.Response.WriteAsJsonAsync(new { error = ex.Message });
             }

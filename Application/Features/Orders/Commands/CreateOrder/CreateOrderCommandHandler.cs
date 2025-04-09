@@ -2,6 +2,7 @@
 using Application.Features.Orders.Dtos;
 using Application.Features.TokenManagement.GetUserIdFromToken;
 using Application.Features.TokenManagement.GetUsernameFromToken;
+using Application.Features.UserManagement.Queries.GetUserProfile;
 using Application.Interfaces.IRepositories;
 using AutoMapper;
 using Domain.Entities;
@@ -26,6 +27,7 @@ namespace Application.Features.Orders.Commands.CreateOrder
 
             var userId = await _mediator.Send(new GetUserIdFromTokenQuery());
             var userName = await _mediator.Send(new GetUsernameFromTokenQuery());
+            var user = await _mediator.Send(new GetUserProfileQuery(userName));
             Address orderAddress;
 
             if (orderDto.AddressId.HasValue)
@@ -99,7 +101,7 @@ namespace Application.Features.Orders.Commands.CreateOrder
             cart.Items.Clear();
             await _cartRepository.UpdateAsync(cart);
             var responseDto = _mapper.Map<OrderDto>(order);
-            responseDto.UserName = userName;
+            responseDto.UserFullName = user.FirstName + ' ' + user.LastName;
             return responseDto;
         }
     }

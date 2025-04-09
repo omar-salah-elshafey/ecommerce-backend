@@ -86,6 +86,7 @@ namespace Infrastructure.DependencyInjection
             services.AddScoped<IUsersMessagesRepository, UsersMessagesRepository>();
             services.AddScoped<INewsletterSubscriberRepository, NewsletterSubscriberRepository>();
             services.AddScoped<IPostRepository, PostRepository>();
+            services.AddScoped<IOtpRepository, OtpRepository>();
             services.AddScoped<IFileService, FileService>();
             services.AddScoped<IImageService, ImageService>();
 

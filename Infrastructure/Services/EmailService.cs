@@ -1,18 +1,19 @@
 ﻿using Application.Dtos;
 using Application.ExceptionHandling;
+using Application.Features.OTPs.Commands.GenerateAndStoreOtp;
+using Application.Features.OTPs.Queries.GetTokenFromOtp;
 using Application.Interfaces;
 using Domain.Entities;
 using MailKit.Net.Smtp;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using MimeKit;
 
 namespace Infrastructure.Services
 {
-    public class EmailService(IConfiguration _config, UserManager<User> _userManager,
-        IOptions<DataProtectionTokenProviderOptions> _tokenProviderOptions, ILogger<EmailService> _logger) : IEmailService
+    public class EmailService(IConfiguration _config, UserManager<User> _userManager, ILogger<EmailService> _logger, IMediator _mediator) : IEmailService
     {
         public async Task SendEmailAsync(string toEmail, string subject, string body)
         {
@@ -43,11 +44,24 @@ namespace Infrastructure.Services
                 throw new NotFoundException("البريد الإلكتروني غير صالح!");
             if (user.EmailConfirmed)
                 throw new EmailAlreadyConfirmedException("الحساب مفعل بالفعل");
-            var result = await _userManager.ConfirmEmailAsync(user, confirmEmailDto.Token);
+
+            var (realToken, isExpired) = await _mediator.Send( new GetTokenFromOtpQuery(confirmEmailDto.Email, confirmEmailDto.Token));
+            if (realToken == null)
+            {
+                if (isExpired)
+                {
+                    _logger.LogWarning("OTP has expired for user {Email}", user.Email);
+                    throw new InvalidTokenException("انتهت صلاحية الرمز، من فضلك اطلب رمز جديد");
+                }
+                _logger.LogError("Invalid OTP for user {Email}", user.Email);
+                throw new InvalidTokenException("الرمز غير صالح.");
+            }
+
+            var result = await _userManager.ConfirmEmailAsync(user, realToken);
             if (!result.Succeeded)
                 throw new InvalidTokenException("الرمز غير صالح.");
 
-            _logger.LogInformation("Your email has been confirmed.");
+            _logger.LogInformation("Email confirmed successfully for user {Email}", user.Email);
         }
 
         public async Task ResendEmailConfirmationTokenAsync(string Email)
@@ -59,12 +73,11 @@ namespace Infrastructure.Services
             if (await _userManager.IsEmailConfirmedAsync(user))
                 throw new EmailAlreadyConfirmedException("الحساب مفعل بالفعل.");
 
-            // Generate new token
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            var expirationTime = _tokenProviderOptions.Value.TokenLifespan.TotalMinutes;
-            // Send the new token via email
+            var otp = await _mediator.Send(new GenerateAndStoreOtpCommand(user.Email, token));
             await SendEmailAsync(user.Email, "رمز التحقق من البريد الإلكتروني",
-                $"أهلا {user.UserName}, استخدم هذا الرمز للتحقق من بريدك الإلكتروني: {token}\n الرمز صالح لمدة {expirationTime} دقائق فقط.");
+                $"أهلا {user.UserName}, استخدم هذا الرمز للتحقق من بريدك الإلكتروني: {otp}\n الرمز صالح لمدة 10 دقائق فقط.");
+            _logger.LogInformation("New OTP sent to {Email}", user.Email);
         }
     }
 }

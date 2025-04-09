@@ -14,7 +14,7 @@ namespace Application.Features.UsersMessages.Commands.UpdateMessageStatus
             var message = await _usersMessagesRepository.GetMessageAsync(request.Id);
             if (message is null)
                 throw new NotFoundException("NOT FOUND!");
-            message.IsRead = !message.IsRead;
+            message.IsRead = true;
             await _usersMessagesRepository.UpdateMessageStatusAsync(message);
             return _mapper.Map<MessageDto>(message);
         }

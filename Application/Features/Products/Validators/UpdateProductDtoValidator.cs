@@ -8,10 +8,8 @@ namespace Application.Features.Products.Validators
 {
     public class UpdateProductDtoValidator : AbstractValidator<UpdateProductDto>
     {
-        private readonly IProductRepository _productRepository;
-        public UpdateProductDtoValidator(IProductRepository productRepository)
+        public UpdateProductDtoValidator()
         {
-            _productRepository = productRepository;
             RuleFor(x => x.Name)
                 .NotEmpty().WithMessage("Product name is required.")
                 .MaximumLength(100).WithMessage("Product name cannot exceed 100 characters.");
@@ -28,7 +26,6 @@ namespace Application.Features.Products.Validators
             RuleForEach(x => x.NewImages).Must(BeAValidFile)
                 .WithMessage("Invalid file type. Allowed types: .jpg, .jpeg, .png.");
 
-            _productRepository = productRepository;
         }
 
         private bool BeAValidFile(IFormFile file)

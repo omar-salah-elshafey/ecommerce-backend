@@ -21,15 +21,15 @@ namespace API.Controllers
             return Created();
         }
 
-        [HttpGet("messages")]
+        [HttpGet("get-messages")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> GetMessagesAsync(int PageNumber = 1, int PageSize = 10)
+        public async Task<IActionResult> GetAllMessagesAsync(int PageNumber = 1, int PageSize = 10)
         {
             var result = await _mediator.Send(new GetUsersMessagesQuery(PageNumber, PageSize));
             return Ok(result);
         }
 
-        [HttpGet("messages/{id}")]
+        [HttpGet("get-message/{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetMessageByIdAsync(Guid id)
         {
@@ -37,7 +37,7 @@ namespace API.Controllers
             return Ok(result);
         }
 
-        [HttpPut("messages/{id}")]
+        [HttpPut("mark-read/{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateMessageStatusAsync(Guid id)
         {
@@ -45,7 +45,7 @@ namespace API.Controllers
             return Ok(result);
         }
 
-        [HttpDelete("messages/{id}")]
+        [HttpDelete("delete/{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteMessageAsync(Guid id)
         {

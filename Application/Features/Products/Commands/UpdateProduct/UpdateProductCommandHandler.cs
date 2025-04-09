@@ -92,8 +92,9 @@ namespace Application.Features.Products.Commands.UpdateProduct
                 var firstImage = product.Images.FirstOrDefault();
                 if (firstImage != null)
                     firstImage.IsMain = true;
-                await _productRepository.UpdateAsync(product);
             }
+            
+            await _productRepository.UpdateAsync(product);
 
             return _mapper.Map<ProductDto>(product);
         }

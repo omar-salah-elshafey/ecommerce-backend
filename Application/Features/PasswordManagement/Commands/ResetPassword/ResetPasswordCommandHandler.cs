@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.Features.PasswordManagement.Commands.ResetPassword
 {
-    public class ResetPasswordCommandHandler(UserManager<User> _userManager, ILogger<ResetPasswordCommandHandler> logger,
+    public class ResetPasswordCommandHandler(UserManager<User> _userManager, ILogger<ResetPasswordCommandHandler> _logger,
         IValidator<ResetPasswordDto> _validator) : IRequestHandler<ResetPasswordCommand>
     {
         public async Task Handle(ResetPasswordCommand request, CancellationToken cancellationToken)
@@ -21,11 +21,16 @@ namespace Application.Features.PasswordManagement.Commands.ResetPassword
             if (user == null)
                 throw new NotFoundException("البريد الإلكتروني غير صالح!");
 
-            var result = await _userManager.ResetPasswordAsync(user, resetPasswordDto.Token.Trim(), resetPasswordDto.NewPassword.Trim());
-            if (!result.Succeeded)
-                throw new InvalidTokenException("الرمز غير صالح!");
+            var hashedPassword = _userManager.PasswordHasher.HashPassword(user, resetPasswordDto.NewPassword);
+            user.PasswordHash = hashedPassword;
+            var updateResult = await _userManager.UpdateAsync(user);
+            if (!updateResult.Succeeded)
+            {
+                _logger.LogWarning("Password reset failed for user {Email}", user.Email);
+                throw new InvalidTokenException("فضل إعادة تعيين كلمة السر.");
+            }
 
-            logger.LogInformation("Your password has been reset successfully.");
+            _logger.LogInformation("Your password has been reset successfully.");
         }
     }
 }
