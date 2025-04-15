@@ -45,8 +45,19 @@ namespace Application.Features.Authentication.Commands.RegisterUser
 
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             var otp = await _mediator.Send(new GenerateAndStoreOtpCommand(user.Email, token));
-            await _emailService.SendEmailAsync(user.Email, "رمز التحقق من البريد الإلكتروني.",
-                $"أهلا يا  {user.UserName}, استخدم هذا الرمز لتفعيل حسابك:  {otp} هذا الرمز صالح لمدة: 10 دقائق فقط.");
+            var placeholders = new Dictionary<string, string>
+            {
+                { "UserName", user.UserName },
+                { "OTP", otp },
+                { "Year", DateTime.Now.Year.ToString() }
+            };
+
+            await _emailService.SendEmailAsync(
+                user.Email,
+                "رمز التحقق من البريد الإلكتروني.",
+                "ConfirmEmail",
+                placeholders
+            );
             _logger.LogInformation("تم إرسال رمز التفعيل إلى بريدك." +
                 $"{Environment.NewLine}قم بتفعيل الحساب لتستطيع استخدامه.");
             return new AuthResponseModel

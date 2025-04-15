@@ -27,6 +27,7 @@ namespace Infrastructure.Data
         public DbSet<NewsletterSubscriber> NewsletterSubscribers { get; set; }
         public DbSet<BlogPost> BlogPosts { get; set; }
         public DbSet<Otp> Otps { get; set; }
+        public DbSet<OrderNotification> OrderNotifications { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

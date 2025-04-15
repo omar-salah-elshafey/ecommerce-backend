@@ -74,6 +74,7 @@ namespace Infrastructure.DependencyInjection
             // Register application services
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<ICookieService, CookieService>();
+            services.AddScoped<IOrderNotificationService, OrderNotificationService>();
             // Register application repositories 
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
@@ -86,6 +87,7 @@ namespace Infrastructure.DependencyInjection
             services.AddScoped<IUsersMessagesRepository, UsersMessagesRepository>();
             services.AddScoped<INewsletterSubscriberRepository, NewsletterSubscriberRepository>();
             services.AddScoped<IPostRepository, PostRepository>();
+            services.AddScoped<IOrderNotificationRepository, OrderNotificationRepository>();
             services.AddScoped<IOtpRepository, OtpRepository>();
             services.AddScoped<IFileService, FileService>();
             services.AddScoped<IImageService, ImageService>();

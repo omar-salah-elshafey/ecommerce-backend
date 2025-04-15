@@ -3,6 +3,7 @@ using Application.Features.Orders.Dtos;
 using Application.Features.TokenManagement.GetUserIdFromToken;
 using Application.Features.TokenManagement.GetUsernameFromToken;
 using Application.Features.UserManagement.Queries.GetUserProfile;
+using Application.Interfaces;
 using Application.Interfaces.IRepositories;
 using AutoMapper;
 using Domain.Entities;
@@ -14,7 +15,7 @@ namespace Application.Features.Orders.Commands.CreateOrder
 {
     public class CreateOrderCommandHandler(IOrderRepository _orderRepository, ICartRepository _cartRepository, IProductRepository _productRepository,
     IMapper _mapper, IMediator _mediator, ICityRepository _cityRepository, IGovernorateRepository _governorateRepository, 
-    IValidator<CreateOrderDto> _validator)
+    IValidator<CreateOrderDto> _validator, IEmailService _emailService, IOrderNotificationService _notificationService)
     : IRequestHandler<CreateOrderCommand, OrderDto>
     {
         public async Task<OrderDto> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
@@ -101,7 +102,23 @@ namespace Application.Features.Orders.Commands.CreateOrder
             cart.Items.Clear();
             await _cartRepository.UpdateAsync(cart);
             var responseDto = _mapper.Map<OrderDto>(order);
-            responseDto.UserFullName = user.FirstName + ' ' + user.LastName;
+            var placeHolder = new Dictionary<string, string>
+            {
+                {"UserName", user.UserName},
+                {"OrderId", order.Id.ToString()},
+                {"OrderDate", order.OrderDate.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss")},
+                {"TotalAmount", order.TotalAmount.ToString("F2")},
+                {"Status", order.Status.ToString()},
+                {"OrderUrl", $"http://localhost:5000/orders/{order.Id}"}
+            };
+            await _emailService.SendEmailAsync(
+                user.Email,
+                "تم إنشاء طلبك بنجاح",
+                "OrderPlaced",
+                placeHolder
+                );
+
+            await _notificationService.NotifyNewOrderAsync(responseDto);
             return responseDto;
         }
     }

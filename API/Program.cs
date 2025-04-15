@@ -2,6 +2,7 @@ using API.Middleware;
 using Application.Configurations;
 using Application.Mappings;
 using Infrastructure.DependencyInjection;
+using Infrastructure.Hubs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -71,12 +72,18 @@ builder.Services.AddAuthentication(
         };
     });
 
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddSignalR();
+
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", builder =>
-        builder.AllowAnyOrigin()
-               .AllowAnyMethod()
-               .AllowAnyHeader());
+    options.AddPolicy("AllowSpecificOrigins", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200", "https://aqrab.online", "https://boxer-tender-conversely.ngrok-free.app", "http://localhost:5000")
+              .AllowAnyMethod()
+              .AllowAnyHeader()
+              .AllowCredentials();
+    });
 });
 
 var app = builder.Build();
@@ -87,11 +94,13 @@ if (app.Environment.IsDevelopment())
     builder.Configuration.AddUserSecrets<Program>();
     app.UseSwagger();
     app.UseSwaggerUI();
-    app.UseCors("AllowAll");
-    app.UseMiddleware<GlobalExceptionMiddleware>();
 }
 
-app.UseHttpsRedirection();
+app.UseCors("AllowSpecificOrigins");
+
+app.UseMiddleware<GlobalExceptionMiddleware>();
+
+//app.UseHttpsRedirection();
 
 app.UseAuthentication();
 
@@ -99,6 +108,10 @@ app.UseAuthorization();
 
 app.UseStaticFiles();
 
+app.MapHub<OrderHub>("/orderHub");
+
 app.MapControllers();
+
+app.MapFallbackToFile("index.html");
 
 app.Run();

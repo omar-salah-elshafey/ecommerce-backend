@@ -23,6 +23,8 @@ namespace Application.Mappings
             CreateMap<City, CityDto>();
 
             CreateMap<Address, AddressDto>();
+
+            CreateMap<OrderNotification, OrderNotificationDto>();
         }
     }
 }

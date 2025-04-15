@@ -16,9 +16,9 @@ namespace Infrastructure.Services
         {
             var cookieOptions = new CookieOptions
             {
-                HttpOnly = true,
+                HttpOnly = false,
                 Expires = expires.ToLocalTime(),
-                Secure = true,
+                Secure = false,
                 SameSite = SameSiteMode.Strict
             };
             _httpContextAccessor.HttpContext?.Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);

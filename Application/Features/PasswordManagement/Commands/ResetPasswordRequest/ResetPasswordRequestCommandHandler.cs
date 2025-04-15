@@ -21,9 +21,18 @@ namespace Application.Features.PasswordManagement.Commands.ResetPasswordRequest
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var otp = await _mediator.Send(new GenerateAndStoreOtpCommand(user.Email, token));
-
-            await _emailService.SendEmailAsync(email, "إعادة تعيين كلمة المرور.",
-                $"أهلا {user.UserName}, استخدم هذا الرمز لتغيير كلمة المرور الخاصة بك: {otp}\n الرمز صالح لمدة 10 دقائق فقط.");
+            var placeholders = new Dictionary<string, string>
+            {
+                { "UserName", user.UserName },
+                { "OTP", otp },
+                { "Year", DateTime.Now.Year.ToString() }
+            };
+            await _emailService.SendEmailAsync(
+                email,
+                "إعادة تعيين كلمة المرور.",
+                "PasswordReset",
+                placeholders
+                );
             logger.LogInformation($"A Password Reset OTP has been sent to {email}");
         }
     }

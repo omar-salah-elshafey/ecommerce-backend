@@ -15,8 +15,10 @@ namespace Infrastructure.Services
 {
     public class EmailService(IConfiguration _config, UserManager<User> _userManager, ILogger<EmailService> _logger, IMediator _mediator) : IEmailService
     {
-        public async Task SendEmailAsync(string toEmail, string subject, string body)
+        public async Task SendEmailAsync(string toEmail, string subject, string templateName, Dictionary<string, string> placeholders)
         {
+            var body = await RenderTemplateAsync(templateName, placeholders);
+
             var email = new MimeMessage();
             email.From.Add(MailboxAddress.Parse(_config["EmailSettings:From"]));
             email.To.Add(MailboxAddress.Parse(toEmail));
@@ -32,6 +34,7 @@ namespace Infrastructure.Services
             await smtp.SendAsync(email);
             await smtp.DisconnectAsync(true);
         }
+
 
         public async Task VerifyEmail(ConfirmEmailDto confirmEmailDto)
         {
@@ -75,9 +78,38 @@ namespace Infrastructure.Services
 
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             var otp = await _mediator.Send(new GenerateAndStoreOtpCommand(user.Email, token));
-            await SendEmailAsync(user.Email, "رمز التحقق من البريد الإلكتروني",
-                $"أهلا {user.UserName}, استخدم هذا الرمز للتحقق من بريدك الإلكتروني: {otp}\n الرمز صالح لمدة 10 دقائق فقط.");
+            var placeholders = new Dictionary<string, string>
+            {
+                { "UserName", user.UserName },
+                { "OTP", otp },
+                { "Year", DateTime.Now.Year.ToString() }
+            };
+
+            await SendEmailAsync(
+                user.Email,
+                "رمز التحقق من البريد الإلكتروني.",
+                "ConfirmEmail",
+                placeholders
+            );
             _logger.LogInformation("New OTP sent to {Email}", user.Email);
         }
+
+        private async Task<string> RenderTemplateAsync(string templateName, Dictionary<string, string> placeholders)
+        {
+            var templatePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "EmailTemplates", $"{templateName}.html");
+
+            if (!File.Exists(templatePath))
+                throw new FileNotFoundException($"Email template '{templateName}' not found.", templatePath);
+
+            var templateContent = await File.ReadAllTextAsync(templatePath);
+
+            foreach (var placeholder in placeholders)
+            {
+                templateContent = templateContent.Replace($"{{{{{placeholder.Key}}}}}", placeholder.Value);
+            }
+
+            return templateContent;
+        }
+
     }
 }

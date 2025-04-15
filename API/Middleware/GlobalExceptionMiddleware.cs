@@ -92,7 +92,7 @@ namespace API.Middleware
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Unexpected error: {ex.Message}");
+                _logger.LogError(ex, $"Unexpected error: {ex.Message}");
                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                 await context.Response.WriteAsJsonAsync(new { error = "حدث خطأ غير متوقع. برجاء المحاولة مرة أخرى لاحقا." });
             }
